@@ -40,7 +40,7 @@
                 <li>Name: Aris Karatarakis</li>
                 <li>Location: Athens, Greece</li>
                 <li>Interests: Tech & Art</li>
-                <li>Twitter: @indvstry</li>
+                <li>Twitter: <a href="https://twitter.com/INDVSTRY">@indvstry</a></li>
                 <li>LinkedIn: Aris Karatarakis</li>
             </ul>
         </section>
@@ -57,6 +57,27 @@
         </section>
         <p>this is a branch deploy test</p>
     </main>
+    <form name="contact" method="POST" netlify>
+        <p>
+            <label>Your Name: <input type="text" name="name" /></label>
+        </p>
+        <p>
+            <label>Your Email: <input type="email" name="email" /></label>
+        </p>
+        <p>
+            <label>Your Role: <select name="role[]" multiple>
+                    <option value="leader">Leader</option>
+                    <option value="follower">Follower</option>
+                </select></label>
+        </p>
+        <p>
+            <label>Message: <textarea name="message"></textarea></label>
+        </p>
+        <p>
+            <button type="submit">Send</button>
+        </p>
+    </form>
+
     <footer>
         <p>Handcrafted with 🖤</p>
         <p>Last update: 2018-09-29</p>
