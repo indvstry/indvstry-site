@@ -1,1 +1,57 @@
-h1 {color: seagreen;}
+h1 {
+  color: seagreen;
+}
+
+/* Lists 
+http://css.maxdesign.com.au/listamatic/index.htm
+*/
+
+/* 
+
+Working example of portfolio
+https://codepen.io/SamAlabz/full/LgRXPd/ */
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: whitesmoke;
+}
+
+#navbar > ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#navbar > ul > li {
+  display: inline;
+  padding-left: 2em;
+}
+
+#navbar > ul > li:first-child {
+  padding-left: 0em;
+}
+
+#welcome-section {
+  height: 100vh;
+  background-color: bisque;
+}
+
+.avatar {
+  width: 200px;
+}
+
+/* media queries */
+@media (max-width: 600px) {
+  #welcome-section {
+    background-color: darkolivegreen;
+  }
+}
+
+/* 
+
+This method is so powerful, because you can make endless combinations of layouts. Let’s say that you want all the sections be 100% height but only the first be 90%, to give the feeling of continuity, that’s ok. What you need is again one more line:
+
+.section { height: 100vh;}
+.section—first { height: 90vh; }*/
