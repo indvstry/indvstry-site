@@ -12,14 +12,14 @@
 <body>
     <header>
         <h1>INDVSTRY Portfolio</h1>
-        <!-- <nav>
+        <nav id="navbar">
             <ul>
-                <li><a href="#about">about</a></li>
-                <li><a href="">two</a></li>
-                <li><a href="">one</a></li>
-                <li><a href="">one</a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
+                <li><a href="#"></a></li>
             </ul>
-        </nav> -->
+        </nav>
         <div class="avatar">
             <img src="media/avatar.png" alt="avatar" class="profile-thumbnail">
             <div class="profile-name">
@@ -32,8 +32,9 @@
         </div>
     </header>
     <main>
-        <section id="about">
-            <h2>about</h2>
+        <!-- welcome section -->
+        <section id="welcome-section">
+            <h1>indvstry portfolio</h1>
             <p>This site is currently under construction</p>
             <ul>
                 <li>Avatar goes here</li>
@@ -44,21 +45,33 @@
                 <li>LinkedIn: Aris Karatarakis</li>
             </ul>
         </section>
+        <!-- skills -->
         <section id="skills">
             <ul>
-                <li>HTML</li>
+                <li>information architecture</li>
+                <li>UI Design</li>
+                <li>semantic encoding</li>
+                <li>XML</li>
                 <li>CSS</li>
-                <li>JAMStack</li>
-            </ul>
+               
         </section>
-        <section id="current-work">
-            <h2>Currently working at</h2>
-            <li>thinking lpc</li>
+        <!-- projects -->
+        <section id="projects">
+            <h2 class="project-title">Currently working on</h2>
+            <li>Language Learning App</li>
+            <li><a href="https://vivl.io" target="_blank">vivlio</a></li>
+        </section>
+        <!-- Profile Links -->
+        <section id="links">
+            <ul>
+                <li id="profile link"><a href="https://github.com/indvstry" target="_blank"></a></li>
+            </ul>
+
         </section>
         <p>this is a branch deploy test</p>
     </main>
     <form name="contact" method="POST" netlify>
-        <p>
+       <p>
             <label>Your Name: <input type="text" name="name" /></label>
         </p>
         <p>
@@ -80,8 +93,14 @@
 
     <footer>
         <p>Handcrafted with 🖤</p>
-        <p>Last update: 2018-09-29</p>
+        <p>Last update: 2018-10-16</p>
     </footer>
 </body>
 
 </html>
+=======
+<!-- User Story #9: My portfolio should have at least one media query.
+User Story #10: The height of the welcome section should be equal to the height of the viewport.
+User Story #11: The navbar should always be at the top of the viewport. -->
+</html>
+>>>>>>> 778b64eb2d5120cf5be6ec74f47ecbe5bee53b95
