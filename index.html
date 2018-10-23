@@ -10,34 +10,30 @@
 </head>
 
 <body>
+    <!-- 
+        header: 
+        - wraps introductory info or navigation links
+        - esay to navigate using assistive technologies
+    -->
+    <nav id="navbar">
+        <ul>
+            <li><a href="#welcome-section">Welcome</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#links">Links</a></li>
+        </ul>
+    </nav>
     <header>
         <h1>INDVSTRY Portfolio</h1>
-        <nav id="navbar">
-            <ul>
-                <li><a href="#"></a></li>
-                <li><a href="#"></a></li>
-                <li><a href="#"></a></li>
-                <li><a href="#"></a></li>
-            </ul>
-        </nav>
-        <div class="avatar">
-            <img src="media/avatar.png" alt="avatar" class="profile-thumbnail">
-            <div class="profile-name">
-                <h3>Aris Karatarakis</h3>
-                <h4>@indvstry</h4>
-            </div>
-            <div class="follow-btn">
-                <button>Follow</button>
-            </div>
-        </div>
+
     </header>
     <main>
         <!-- welcome section -->
         <section id="welcome-section">
-            <h1>indvstry portfolio</h1>
-            <p>This site is currently under construction</p>
+            <h1>Welcome to my portfolio page</h1>
+            <img class="avatar" src="media/my-octocat-1540029024196.png" alt="octocat avatar" class="profile-thumbnail">
+            <p>Welcome to my portfolio page</p>
             <ul>
-                <li>Avatar goes here</li>
                 <li>Name: Aris Karatarakis</li>
                 <li>Location: Athens, Greece</li>
                 <li>Interests: Tech & Art</li>
@@ -53,25 +49,38 @@
                 <li>semantic encoding</li>
                 <li>XML</li>
                 <li>CSS</li>
-               
+                <li>Toolkit
+                    <ul>
+                        <li>Sketch</li>
+                        <li>InVision</li>
+                        <li>Abstract</li>
+                        <li>InDesign</li>
+                    </ul>
+                </li>
+
+
         </section>
         <!-- projects -->
         <section id="projects">
-            <h2 class="project-title">Currently working on</h2>
-            <li>Language Learning App</li>
-            <li><a href="https://vivl.io" target="_blank">vivlio</a></li>
+            <h2>Currently working on</h2>
+            <ul class="tiles">
+                <li>Language Learning App</li>
+                <li><a class="project-title" href="https://vivl.io" target="_blank">vivlio</a></li>
+                <li>completing fcc Responsive Web Design Projects</li>
+            </ul>
         </section>
         <!-- Profile Links -->
         <section id="links">
             <ul>
-                <li id="profile link"><a href="https://github.com/indvstry" target="_blank"></a></li>
+                <li><a id="profile-link" href="https://github.com/indvstry" target="_blank"></a></li>
             </ul>
 
         </section>
         <p>this is a branch deploy test</p>
     </main>
+    <!-- netlify contact form 
     <form name="contact" method="POST" netlify>
-       <p>
+        <p>
             <label>Your Name: <input type="text" name="name" /></label>
         </p>
         <p>
@@ -90,17 +99,12 @@
             <button type="submit">Send</button>
         </p>
     </form>
-
+-->
     <footer>
         <p>Handcrafted with 🖤</p>
         <p>Last update: 2018-10-16</p>
     </footer>
+    <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
 </body>
 
 </html>
-=======
-<!-- User Story #9: My portfolio should have at least one media query.
-User Story #10: The height of the welcome section should be equal to the height of the viewport.
-User Story #11: The navbar should always be at the top of the viewport. -->
-</html>
->>>>>>> 778b64eb2d5120cf5be6ec74f47ecbe5bee53b95
