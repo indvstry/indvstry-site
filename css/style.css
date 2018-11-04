@@ -47,9 +47,6 @@ html {
 }
 
 /* Headings */
-h1 {
-  color: red;
-}
 
 /* Lists http://css.maxdesign.com.au/listamatic/index.htm */
 
@@ -91,10 +88,12 @@ nav {
 .avatar {
   grid-area: myAvatar;
   align-self: center;
+  justify-self: center;
 }
 .header-text {
   grid-area: myHeaderText;
   align-self: center;
+  justify-self: center;
 }
 
 header {
@@ -104,12 +103,11 @@ header {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   grid-template-areas: 'myAvatar myHeaderText';
-  grid-column-gap: 16px;
-  grid-row-gap: 16px;
+  column-gap: 16px;
 }
 
 /* media queries */
-@media (min-width: 600px) {
+@media (min-width: 320px) {
   header {
     background-color: #f6f8fa;
   }
