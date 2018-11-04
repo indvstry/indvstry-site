@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="css/style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>INDVSTRY Pprtfolio</title>
+    <title>INDVSTRY Portfolio</title>
 </head>
+<!-- Cheklist
+- [] pass axe
+- [] pass chrome audit -->
 
 <body>
     <!-- 
@@ -15,91 +18,25 @@
         - wraps introductory info or navigation links
         - esay to navigate using assistive technologies
     -->
-    <nav id="navbar">
+    <!-- <nav id="navbar">
         <ul>
             <li><a href="#welcome-section">Welcome</a></li>
             <li><a href="#skills">Skills</a></li>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#links">Links</a></li>
         </ul>
-    </nav>
-    <header>
-        <h1>INDVSTRY Portfolio</h1>
+    </nav> -->
+    <!-- header -->
+    <header class="header-grid">
+        <img class="avatar" src="media/my-octocat-1540029024196.png" alt="octocat">
+        <div class="header-text">
+            <h1 class="handle">INDVSTRY</h1>
+            <p class="byline">Aris Karatarakis <br> Athens, Greece</p>
+            <blockquote class="quote"> Curious about everything</blockquote>
+        </div>
     </header>
-    <main>
-        <section id="welcome-section">
-            <h1>Welcome to my portfolio page</h1>
-            <img class="avatar" src="media/my-octocat-1540029024196.png" alt="octocat">
-            <p>Welcome to my portfolio page</p>
-            <ul>
-                <li>Name: Aris Karatarakis</li>
-                <li>Location: Athens, Greece</li>
-                <li>Interests: Tech & Art</li>
-                <li>Twitter: <a href="https://twitter.com/INDVSTRY">@indvstry</a></li>
-                <li>LinkedIn: Aris Karatarakis</li>
-            </ul>
-        </section>
-        <!-- skills -->
-        <section id="skills">
-            <ul>
-                <li>information architecture</li>
-                <li>UI Design</li>
-                <li>semantic encoding</li>
-                <li>XML</li>
-                <li>CSS</li>
-                <li>Toolkit
-                    <ul>
-                        <li>Sketch</li>
-                        <li>InVision</li>
-                        <li>Abstract</li>
-                        <li>InDesign</li>
-                    </ul>
-                </li>
-            </ul>
-        </section>
-        <!-- projects -->
-        <section id="projects">
-            <h2>Currently working on</h2>
-            <ul class="tiles">
-                <li>Language Learning App</li>
-                <li><a class="project-title" href="https://vivl.io" target="_blank">vivlio</a></li>
-                <li>completing fcc Responsive Web Design Projects</li>
-            </ul>
-        </section>
-        <!-- Profile Links -->
-        <section id="links">
-            <ul>
-                <li><a id="profile-link" href="https://github.com/indvstry" target="_blank"></a></li>
-            </ul>
+    <!-- main -->
 
-        </section>
-
-    </main>
-    <!-- Netlify contact form -->
-    <form name="contact" method="POST" netlify>
-        <p>
-            <label>Your Name: <input type="text" name="name" /></label>
-        </p>
-        <p>
-            <label>Your Email: <input type="email" name="email" /></label>
-        </p>
-        <p>
-            <label>Your Role: <select name="role[]" multiple>
-                    <option value="leader">Leader</option>
-                    <option value="follower">Follower</option>
-                </select></label>
-        </p>
-        <p>
-            <label>Message: <textarea name="message"></textarea></label>
-        </p>
-        <p>
-            <button type="submit">Send</button>
-        </p>
-    </form>
-    <footer>
-        <p>Handcrafted with 🖤</p>
-        <p>Last update: 2018-10-16</p>
-    </footer>
     <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
 </body>
 
