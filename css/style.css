@@ -107,8 +107,10 @@ header {
 }
 
 /* media queries */
-@media (min-width: 320px) {
+@media (max-width: 600px) {
   header {
-    background-color: #f6f8fa;
+    grid-template-areas:
+      'myAvatar'
+      'myHeaderText';
   }
 }
