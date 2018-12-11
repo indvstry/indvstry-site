@@ -46,19 +46,36 @@ html {
   /* We inherit box-sizing: border-box; from our <html> selector instead of applying box-sizing: border-box; directly to the * selector */
 }
 
+body {
+  filter: grayscale(100%);
+}
+
+a {
+  text-decoration-skip-ink: auto;
+}
 /* Headings */
 
 /* Lists http://css.maxdesign.com.au/listamatic/index.htm */
 
-nav {
+/* nav {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   background-color: whitesmoke;
+} */
+
+.nav-container {
+  display: flex;
+  justify-content: space-around;
 }
 
-#navbar > ul {
+.nav-container > li {
+  display: flex;
+  /* flex:    1; */
+}
+
+/* #navbar > ul {
   list-style-type: none;
   padding-left: 0;
 }
@@ -70,7 +87,7 @@ nav {
 
 #navbar > ul > li:first-child {
   padding-left: 0em;
-}
+} */
 
 #welcome-section {
   height: 100vh;
@@ -112,5 +129,15 @@ header {
     grid-template-areas:
       'myAvatar'
       'myHeaderText';
+  }
+}
+
+@media all and (max-width: 320px) {
+  .nav-container {
+    flex-wrap: wrap;
+  }
+
+  .nav-container > li {
+    flex-basis: 100%;
   }
 }

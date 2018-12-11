@@ -1,47 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>INDVSTRY Portfolio</title>
-</head>
-<!-- Cheklist
-- [] pass axe
-- [] pass chrome audit -->
+  </head>
+  <!--
+    Cheklist
+    - [] pass axe
+    - [] pass chrome audit
+  -->
 
-<body>
-    <!-- 
-        header: 
-        - wraps introductory info or navigation links
-        - esay to navigate using assistive technologies
+  <body>
+    <!--
+      header:
+      - wraps introductory info or navigation links
+      - esay to navigate using assistive technologies
     -->
-    <!-- <nav id="navbar">
-        <ul>
-            <li><a href="#welcome-section">Welcome</a></li>
-            <li><a href="#skills">Skills</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#links">Links</a></li>
-        </ul>
-    </nav> -->
+    <nav id="navbar" role="navigation">
+      <ul class="nav-container">
+        <li><a href="#welcome-section">Welcome</a></li>
+        <li><a href="#skills">Skills</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#links">Links</a></li>
+      </ul>
+    </nav>
     <!-- header -->
     <header class="header-grid">
-        <img class="avatar" src="media/my-octocat-1540029024196.png" alt="octocat">
-        <div class="header-text">
-            <h1 class="handle">INDVSTRY</h1>
-            <p class="byline">Aris Karatarakis <br> Athens, Greece</p>
-            <blockquote class="quote"> Curious about everything</blockquote>
-        </div>
+      <img
+        class="avatar"
+        src="media/my-octocat-1540029024196.png"
+        alt="octocat"
+      />
+      <div class="header-text">
+        <h1 class="handle">INDVSTRY</h1>
+        <p class="byline">
+          Aris Karatarakis <br />
+          Athens, Greece
+        </p>
+        <blockquote class="quote">Curious about everything</blockquote>
+      </div>
     </header>
     <!-- main -->
+    <main>
+      <article id="flexGrid">
+        <h1>Thoughts on CSS Grid</h1>
+        <h2>Grid vs Flexbox</h2>
+        <p>
+          Flexbox is made for one dimensional layouts and Grid is made for two
+          dimensional designs
+          <cite
+            ><a
+              href="https://hackernoon.com/the-ultimate-css-battle-grid-vs-flexbox-d40da0449faf"
+            ></a
+          ></cite>
+        </p>
+        <ul>
+          <li>flexbox: three buttons inside a header</li>
+          <li>grid: entire layout in tow dimensions w/ rows and columns</li>
+        </ul>
+        <p>Flexbox = content basis</p>
+        <p>Grid= Layout basis</p>
+      </article>
+    </main>
     <footer>
-        <p>Handcrafted with 🖤</p>
-        <p>Last update: 2018-11-04</p>
+      <p>Handcrafted with 🖤</p>
+      <p>Last update: 2018-11-04</p>
     </footer>
 
-    <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
-</body>
-
+    <!--
+      <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+    -->
+  </body>
 </html>

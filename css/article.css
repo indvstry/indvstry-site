@@ -1,0 +1,26 @@
+article {
+  display: grid;
+  grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+}
+
+article > * {
+  grid-column: 4;
+}
+
+figure {
+  grid-column-start: 2;
+  grid-column-end: -1;
+  margin: 20px 0;
+}
+
+article > blockquote {
+  grid-column: 3 / 5;
+  padding-left: 10px;
+  color: #666;
+  border-left: 3px solid black;
+}
+
+aside {
+  grid-column: 5 /7;
+  padding-left: 10px;
+}
