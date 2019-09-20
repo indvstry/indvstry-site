@@ -1,143 +1,58 @@
-/* CSS Variables */
 :root {
-  --transition-type: padding-left 250ms ease-out;
-  --transition-padding: 20px;
-  --transition-font-size: 100%;
-  --navbar-bgcolor: lightgray;
-  --navbar-h2-color: brown;
-  --navbar-h2-border: thin brown solid;
-  --navbar-font-size: 12px;
-  --font-stack: Georgia, 'Times New Roman', serif;
-  --font-size: 16px;
-  --font-color: darkblue;
-  --max-width: 1000px;
-  --header-fontvariant: normal;
-  --header-color: white;
-  --header-bg: teal;
-  --header-shadow: 2px 3px 4px red;
-  --header-curve: 20px;
-  --header-border: thin darkblue solid;
-  --teaser-color: yellow;
-  --byline-color: white;
-  --h3-color: teal;
-  --h3-fontvariant: small-caps;
-  --dropcap-size: 200%;
-  --dropcap-font: Times;
-  --pullquote-border: thick black solid;
-  --pullquote-start: url(quotestart.png);
-  --pullquote-end: url(quoteend.png);
-  --zebraoddcolor: white;
-  --zebraevencolor: lightyellow;
-  --linkfg: darkblue;
-  --linkbg: white;
+  --highlight-color: hsla(55, 80%, 70%, 1);
 }
 
 html {
-  /* border-box box model allows us to add padding and border to our elements without increasing their size */
-  box-sizing: border-box;
-  font-family: serif;
-  font-family: var(--font-stack);
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-  /* We inherit box-sizing: border-box; from our <html> selector instead of applying box-sizing: border-box; directly to the * selector */
+  font-size: 18px;
 }
 
 body {
-  filter: grayscale(100%);
+  line-height: 1.4;
+  background-color: #eee;
+  color: #444;
+  max-width: 650px;
+  margin: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-a {
-  text-decoration-skip-ink: auto;
-}
-/* Headings */
-
-/* Lists http://css.maxdesign.com.au/listamatic/index.htm */
-
-/* nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: whitesmoke;
-} */
-
-.nav-container {
-  display: flex;
-  justify-content: space-around;
+p {
+  font-size: 1rem;
 }
 
-.nav-container > li {
-  display: flex;
-  /* flex:    1; */
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin-top: 2rem;
 }
 
-/* #navbar > ul {
+h2 {
+  font-size: 1.2rem;
+}
+
+ul {
   list-style-type: none;
-  padding-left: 0;
 }
 
-#navbar > ul > li {
-  display: inline;
-  padding-left: 2em;
+section {
+  margin: auto;
 }
 
-#navbar > ul > li:first-child {
-  padding-left: 0em;
-} */
-
-#welcome-section {
-  height: 100vh;
-  background-color: bisque;
+.highlight {
+  /* font-size: 1.5em; */
+  background: var(--highlight-color);
+  margin: 0;
+  padding: 2px;
+  line-height: 1.5;
+  box-shadow: -0.166666667em 0 0 0 $highlight-color,
+    0.166666667em 0 0 0 $highlight-color;
 }
 
-.avatar {
-  width: 45vw;
+time {
+  font-variant: small-caps;
 }
 
-/* VH all sections be 100% height but only the first be 90%, to give the feeling of continuity,: .section { height: 100vh;} .section—first { height: 90vh; }*/
-
-/* GRIDS */
-
-.avatar {
-  grid-area: myAvatar;
-  align-self: center;
-  justify-self: center;
-}
-.header-text {
-  grid-area: myHeaderText;
-  align-self: center;
-  justify-self: center;
-}
-
-header {
-  width: 100%;
-  height: 800px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto;
-  grid-template-areas: 'myAvatar myHeaderText';
-  column-gap: 16px;
-}
-
-/* media queries */
-@media (max-width: 600px) {
-  header {
-    grid-template-areas:
-      'myAvatar'
-      'myHeaderText';
-  }
-}
-
-@media all and (max-width: 320px) {
-  .nav-container {
-    flex-wrap: wrap;
-  }
-
-  .nav-container > li {
-    flex-basis: 100%;
-  }
+ul {
+  padding-top: 1rem;
 }
