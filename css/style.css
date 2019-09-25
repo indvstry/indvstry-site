@@ -1,13 +1,39 @@
 :root {
   --highlight-color: hsl(49, 89%, 70%);
-  --tag-bg: hsl(240, 25%, 46%);
-  --tag-text: hsl(190, 66%, 78%);
-  --text-color: hsla(182, 94, 94, 0);
-  --heading-color: hsl(240, 25%, 46%);
+  --tag-bg: hsl(48, 94%, 68%);
+  --tag-text: hsl(15, 86%, 30%);
+  --text-color: hsl(210, 24%, 16%);
+  --heading-color: hsl(209, 18%, 30%);
+  --page-background: hsl(49,100%,96%);
+  --border-deco: hsl(42,87%,55%);
+  --rotate-90-left: transform: rotate(-90deg);
+  --allGray: filter: grayscale(100%);
 }
 
 html {
   font-size: 18px;
+}
+
+/* Resets the box-model so that widths and heights are not affected by their borders or padding. */
+html {
+  box-sizing: border-box;
+}
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+.box {
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  padding: 10px;
+  background: tomato;
+  color: white;
+  border: 10px solid red;
+}
+.content-box {
+  box-sizing: content-box;
 }
 
 header {
@@ -17,13 +43,13 @@ header {
 
 body {
   line-height: 1.4;
-  background-color: hsl(0, 0, 93);
+  background-color: var(--page-background);
   color: var(--text-color);
   max-width: 650px;
   margin: auto;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-top: 0.5rem solid hsl(240, 25%, 46%);
+  border-top: 0.5rem solid var(--border-deco);
   font-family: Georgia, serif;
 }
 
@@ -56,20 +82,15 @@ h2 {
 
 ul {
   list-style-type: none;
-}
-
-ul {
   padding-top: 1rem;
   padding-bottom: 1rem;
+  padding-left: 0;
 }
 
 li {
   padding-top: 1rem;
-  
-  
-}
+  }
 
-}
 
 .highlight {
   background: var(--highlight-color);
@@ -84,13 +105,24 @@ li {
 
 time {
   font-variant: small-caps;
-  background-color: var(--tag-bg);
+  /* background-color: var(--tag-bg); */
+  border-top: 0.1rem solid var(--border-deco);
   color: var(--tag-text);
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-  padding-top: 0.2rem;
-  padding-bottom: 0.4rem;
-  border-radius: 0.3rem;
+  padding-top: 1rem;
+
+}
+
+.clDayName {
+  font-size: 1rem;
+  vertical-align: middle;
+
+}
+
+.clDayNum {
+  font-size: 2.5rem;
+  vertical-align: middle;
+
+  
 }
 
 footer {
@@ -102,6 +134,35 @@ footer {
   flex-direction: row;
 }
 
-.socialLinks li {
+.socialLinks li { 
   margin-left: 1rem;
 }
+/* content type specific emojis */
+
+.read:before {
+  content: "👓 ";
+  filter: grayscale(100%);
+}
+
+/* blockquote */
+blockquote {
+  font-size: 1rem;
+  /* width:60%; */
+  margin:1rem auto;
+  padding:1.2em 30px 1.2em 75px;
+  border-left:0.5rem solid var(--border-deco);
+  line-height:1.6;
+  position: relative;
+  background:hsl(24, 100%, 95%);
+}
+
+blockquote::before {
+  content: "\201C";
+  color: var(--border-deco);
+  font-size:4rem;
+  position: absolute;
+  left: 10px;
+  top:-10px;
+}
+
+
