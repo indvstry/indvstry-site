@@ -6,8 +6,7 @@
   --heading-color: hsl(209, 18%, 30%);
   --page-background: hsl(49,100%,96%);
   --border-deco: hsl(42,87%,55%);
-  --rotate-90-left: transform: rotate(-90deg);
-  --allGray: filter: grayscale(100%);
+  --allGray: grayscale(100%);
 }
 
 html {
@@ -41,8 +40,13 @@ header {
   padding: 0.5rem;
 }
 
+.byline {
+  font-style: italic;
+}
+
+
 body {
-  line-height: 1.4;
+  line-height: 1.8;
   background-color: var(--page-background);
   color: var(--text-color);
   max-width: 650px;
@@ -85,11 +89,26 @@ ul {
   padding-top: 1rem;
   padding-bottom: 1rem;
   padding-left: 0;
+  margin-block-start: 0;
 }
 
-li {
-  padding-top: 1rem;
-  }
+li {padding-top: 1rem;}
+
+li p {
+  margin-bottom: 0;
+}
+
+time + ul {
+  padding:0;
+}
+
+.logEntry {padding-top: 1.5rem;}
+
+/* links */
+a {
+  color: var(--text-color);
+}
+
 
 
 .highlight {
