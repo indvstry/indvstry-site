@@ -46,7 +46,7 @@ header {
 
 
 body {
-  line-height: 1.8;
+  line-height: 1.7;
   background-color: var(--page-background);
   color: var(--text-color);
   max-width: 650px;
