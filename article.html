@@ -1,41 +1,326 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <!-- <link rel="stylesheet" href="css/style.css" /> -->
-    <link rel="stylesheet" href="css/article.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Medium Article w/ CSS Grid</title>
-  </head>
+<!--
+  
+## STRUCTURE
+  Structure inspired by:
 
-  <!--
-    based on:
-    https://medium.freecodecamp.org/how-to-recreate-mediums-article-layout-with-css-grid-b4608792bad1
-  -->
-  <body>
-    <article>
-      <h1>Running any NPM package in the browser locally</h1>
+- [Webaim's article structure](https://webaim.org/intro/)
+- [Scott I Hara, accessibility engineer](https://www.scottohara.me/) 
+- [WebAim: Skip Navigation Links](https://webaim.org/techniques/skipnav)
+## PENDINGS
+- [ ] add field link to article of a different language
+-->
 
-      <p>
-        JavaScript has never had any official solution for distributing
-        packages, and every web platform (Rails, Django etc) has their own idea
-        of how to structure and package JavaScript. In the last few years NPM
-        has started becoming the canonical way of distribution, with Webpack as
-        the build system, but there’s no way to load NPM packages in the browser
-        without a server-side component.
-      </p>
-      <aside><p>this is an aside</p></aside>
-      <blockquote>
-        <p>
-          Scrimba is a platform for interactive coding screencast where you can
-          run the code at any moment in time.
+<head>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/article.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="description" content="The Manifold" />
+  <title>The Abuse that Haunted Leros &middot; The Manifold Files</title>
+</head>
+
+<body>
+  <div id="skiptocontent">
+    <a href="#mainContent">skip to main content</a>
+  </div>
+  <header>
+    <!-- Web Aim places its logo on an h2 for some reason… -->
+    <!-- <nav>
+      <h2 class="hidden">Main Navigation</h2>
+      <ul>
+        <li></li>
+      </ul>
+    </nav> -->
+  </header>
+  <main>
+    <article class="story--caseStudy" itemscope itemtype="https://schema.org/Article" id="mainContent">
+      <header>
+        <p class="story-rubric"></p> <a class="story-rubric__link" href="">case study</a></p>
+        <p class="story__location">leros</p>
+        <h1 class="story__title" tabindex="-1" itemprop="name headline">The Abuse that&nbsp;Haunted Leros
+        </h1>
+        <p class="article__subtitle">
+          This is the article subtitle
         </p>
-      </blockquote>
+        <div class="metaInfo">
+          <p>Published <time datetime="2019-10-10" itemprop="datePublished">Oct 10, 2019</time> <span
+              aria-hidden="true">|</span>Updated: <time datetime="2019-11-10" itemprop="dateModified">Oct 11,
+              2019</time>
+          </p>
+        </div>
+      </header>
+      <!-- story nav -->
+      <nav class="article__nav">
+        <h2>Case Study Contents</h2>
+        <ol>
+          <li><a href="#start">Beginning of Story</a></li>
+          <li><a href="#section02">An Absent Safety Net</a></li>
+          <li><a href="#section03">The Plight of the Children</a></li>
+        </ol>
+      </nav>
+      <div class="article__body flow" itemprop="articleBody">
+        <p class="lede" id="start">An infamous case of abused children in a remote Greek island shows just how the
+          authorities and local societies are
+          failing to provide a safety net.</p>
 
-      <figure>
-        <img src="https://mave.me/img/projects/full_placeholder.png" />
-      </figure>
+        <!-- IMG: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture -->
+        <!-- <picture class="picture">
+        <source srcset="logo.webp" type="image/webp">
+        <img src="logo.png" alt="logo of X">
+      </picture>
+      <p class="picture__caption">This is a caption</p> -->
+
+        <p class="story__p">It was a Tuesday, late May of 2018, when Panagiotis Avrithis, a lawyer and active member of
+          the
+          community in the
+          island
+          of Kos, had a surprise visit from a client of his who lives in the neighboring island of Leros. No appointment
+          had
+          been
+          scheduled between the two and there was no open legal case of his pending. The reason for his visit, as he
+          said,
+          was “to
+          say goodbye”. No further explanation was given.
+        </p>
+        <p class="story__p">
+          About a week later, Mr. Avrithis and his wife would realize what their elderly client had in mind – and the
+          rest
+          of
+          Greece with them. The day before, the man’s son and his daughter-in-law had been arrested, after having
+          confessed
+          to a
+          series of acts of sexual abuse towards their children. And almost instantly, next to being a family friend,
+          Mr.
+          Avrithis
+          put on his lawyer hat and became the prosecutor for the trial.
+        </p>
+        <p class="story__p">
+          The incident became the number one issue on Greece’s sensationalist noontime TV shows. Mr. Avrithis would
+          answer
+          to “one
+          in twenty journalists” who called him, “whoever was the lucky one”. The phone lines of the Police, the State
+          Prosecutor,
+          the City Hall of Leros, the Hospital, the Community Centre and anyone who could provide any information were
+          on
+          fire.
+          The headlines spoke of a “Horror without an end in Leros”, “Revelations for the Parents-Monsters”, “Shocking
+          Details on
+          the Parents-Monsters of Leros”. Online news outlets were continuously updated with “new revelations”, “twists”
+          and
+          opinions by anyone willing to comment on the incident.
+        </p>
+        <p>
+          Mr. Avrithis has also used the word “monster” in one of his interviews. But the term wasn’t his choice. He was
+          simply
+          quoting the elderly gentleman, the grandfather of the abused children, who used the word referring to his son
+          in
+          a
+          phone
+          call with the lawyer, after the events had come to light. The file is still in the Interrogator’s bureau when
+          we
+          sit
+          down for an interview with him, but the testimonies in it are accusing the parents of repeated sexual and
+          physical
+          abuse, as well as forcing the children to work on the family’s plot in harsh circumstances.
+
+        </p>
+        <p>
+          The family had four children. The oldest one, a boy, left the house as soon as he reached adulthood. According
+          to
+          statements, he had also suffered continuous physical abuse. He has three younger siblings: two brothers -22
+          and
+          9
+          years
+          old- and a 14-year-old children. In the parents’ confessions, it was the elder ones who had suffered the
+          abuse.
+          The
+          youngest one had not gone through the abuse - “yet”, adds Mr. Avrithis.
+
+        </p>
+
+        <h2 class="story__section" id="section02">An Absent Safety Net</h2>
+        <p>Popi Emmanouil is a social worker in the State Infirmary of Leros. She constitutes the island’s Social
+          Service
+          by
+          herself, meaning she is the only person who can receive an order by the State Prosecutor, conduct a social
+          investigation
+          into the issue and file a report. She’s often called upon to do the same for the neighboring islands. This is
+          a
+          difficult feat, and not only in terms of the workload. In a distant island like Leros, even something as
+          simple
+          as
+          getting the funds to transfer children to the “Agia Sofia” hospital in Athens to be examined, is not always
+          feasible.
+        </p>
+        <p id="redd" class="green">Ms. Emmanouil has dealt with such a case in the past, in which she received a
+          negative response on
+          the funds
+          needed for
+          transferring children to Athens from the City of Leros (since its responsibility only concerns cases that are
+          dealt by
+          its non-existent Social Service), the State Infirmary (since only the City of Leros is allowed to have
+          expenses
+          for
+          transferring children) and the company that owns the ship lines (which refused the transfer of the children
+          for
+          free). A
+          solution was provided by the Church of Leros which provided the travel expenses, out of sheer goodwill.
+        </p>
+        <p>Ms. Emmanouil has an acute sense of duty. She explains at length the difficulty of placing limits between her
+          work and
+          her personal life and the ways in which she protects her own children – emotionally or otherwise.
+        </p>
+        <p>A few days earlier, Ms. Anta Kafasari, the Prefect for Minors in the State Prosecutor bureau of Kos, has used
+          an
+          example
+          of a personal experience of hers with Ms. Emmanouil to highlight the emotional dangers of their work: once,
+          the
+          two of
+          them escorted four children to the “Agia Sofia” hospital in Athens and ended up spending a few days with them.
+          The
+          children had been removed from parents with severe mental health issues. On the last day, the youngest one,
+          still
+          an
+          infant, spoke for the first time and called Ms. Emmanouil “mama”; and on the next day, Ms. Emmanouil would
+          return
+          to
+          Leros, the children were moved to a shelter and they would never see each other again.
+        </p>
+        <p>The claims that lead us to Ms. Emmanouil, show that her involvement in the abuse incident has been crucial,
+          but
+          she
+          cannot discuss it. A veil of silence has been spread over all involved authorities. The State Infirmary does
+          not
+          answer
+          our repeated requests for an interview with Ms. Emmanouil – we can only talk to her for a general view of her
+          profession. Our attempts to get permission for an interview with the policeman who handled the interrogation
+          and
+          brought
+          out the confessions were not fruitful. Also, according to the headmistress of the local Junior High School,
+          the
+          Federation of School Teachers has banned any discussion with journalists on the issue.
+        </p>
+        <h2 class="story__section" id="section03">The Plight of the Children
+        </h2>
+        <p>Both in Athens and in Leros, there are many people involved willing to talk anonymously. A variety of sources
+          have
+          confirmed that in the summer of 2017, by order of the State Prosecutor, the daughter, then 12 years old, was
+          escorted by
+          her parents to Athens to be examined in “Agia Sofia” hospital. The youngest boy, 6 years old at the time, was
+          also
+          taken
+          to “Agia Sofia” for a “preventive examination”. From there, the boy returned home to Leros with the parents.
+          The
+          daughter was removed from custody and became one of the many children who are hospitalized without reason for
+          extended
+          periods of time. After two months, judicial authorities placed her in the custody of an institution ran by the
+          church.
+          The question of how can two people be adequate parents for one child and inadequate for another was neither
+          asked,
+          nor
+          answered.
+        </p>
+        <p>A few months later, in the fall of 2017, the girl inexplicably reappeared in Leros. The only mandatory
+          commitment
+          was
+          that she would attend weekly sessions with a psychologist, not at the hospital, but at the Community Centre
+          ran
+          by
+          the
+          City of Leros. The State Prosecutor of Kos did not order any social investigation into the family.
+        </p>
+        <p>One day in May 2018, the parents arrived at the Community Centre. Their daughter was in the back seat of the
+          car
+          half-faint. Ms. Vaso Evangelou, the Centre’s social worker, perceived this as an expression of anxiety over
+          school,
+          similar to ones she had in the past. After she came around with the help of Ms. Evangelou, she returned home.
+          On
+          the
+          next day, a Friday, she came back to the centre underfed, refusing to eat or drink, her faint all the more
+          intense. This
+          time, she was immediately taken to the State Infirmary of Leros.
+        </p>
+        <p>At the same time as the child was at the Infirmary, the children’s aunt testified on her own volition at the
+          Police
+          Precinct of Leros. Later, in September she would unsuccessfully file for custody of the children. After her
+          aunt’s
+          testimony, the girl also opened up and testified herself. And then, the parents’ confession sealed the case.
+          The
+          parents
+          were arrested, while the children were moved by order of the State Prosecutor to a hotel in Kos and then to a
+          shelter
+          where they live until today.
+        </p>
+        <p>All residents of Leros who comment on the issue agree that the children are “saved”. Their future seems
+          better,
+          but
+          that’s not necessarily true for other children who might be going through a similar plight in the island. The
+          City
+          still
+          lacks a Social Service, let alone one that would specialize in dealing with incidents of child abuse. The
+          island
+          still
+          lacks a child psychologist or child psychiatrist. Schools still lack specialized personnel that could assist
+          in
+          tracing
+          such incidents in time.
+        </p>
+        <p>Even the family house, which is vacant nowadays, has not changed at all. It is still the hermetically sealed
+          citadel on
+          top of a mountain village – almost identical to the other houses nearby. There are no squares or cafes. Two
+          elderly
+          ladies sitting in the balcony on top of the village’s only shop – a hairdresser’s salon – are the sum total of
+          its
+          street life. Despite the good weather, all other residents of the village are locked in their houses. Cars and
+          trailers
+          are parked outside, but no window blind is open. Suddenly, the claim that if anything bad was happening,
+          Leros’
+          society
+          could not know about it, seems a little bit more convincing. They might also not know in the future.
+        </p>
+        <!-- /.article__body-->
+      </div>
     </article>
-  </body>
+    <footer>
+      <!-- not to be implemented in this sprint -->
+    </footer>
+
+  </main>
+
+
+
+  <!-- https://html.spec.whatwg.org/multipage/semantics-other.html#tag-clouds -->
+  <!-- <ul class="tag-cloud">
+    <li class="tag-cloud-4"><a title="28 instances" href="/t/apple">apple</a> <span>(popular)</span></li>
+    <li class="tag-cloud-2"><a title="6 instances" href="/t/kiwi">kiwi</a> <span>(rare)</span></li>
+    <li class="tag-cloud-5"><a title="41 instances" href="/t/pear">pear</a> <span>(very popular)</span></li>
+  </ul> -->
+
+  <aside id="articleMeta">
+    <div id="lastUpdate">Last Updated:
+      <time datetime="2019-10-04"></time>
+    </div>
+    <div id="translations">
+      <h2>Translations</h2>
+      <ul>
+        <li><a href="https://google.com">Google</a></li>
+      </ul>
+    </div>
+  </aside>
+
+
+
+
+
+
+  <footer>
+
+  </footer>
+
+  <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
+</body>
+
 </html>
