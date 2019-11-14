@@ -13,7 +13,7 @@ html {
   font-size: 18px;
 }
 
-/* Resets the box-model so that widths and heights are not affected by their borders or padding. */
+/* Resets box-model so that widths and heights arent affected by borders or padding. */
 html {
   box-sizing: border-box;
 }
@@ -185,3 +185,10 @@ blockquote::before {
 }
 
 
+#redd {
+  color:red;
+}
+
+.green {
+  color:green;
+}

@@ -1,26 +1,23 @@
-article {
-  display: grid;
-  grid-template-columns: 1fr 1fr 10px 740px 10px 1fr 1fr;
+/* 
+Resources
+https://24ways.org/2018/managing-flow-and-rhythm-with-css-custom-properties/
+
+ */
+ :root {
+   --text-color: hsl(210, 24%, 16%);
+   --heading-color: hsl(209, 18%, 30%);
+   --page-background: hsl(49,100%,96%);
+
+}
+ .flow {
+    margin-top: 1em; /* for older browsers */
+  --flow-space: 1em;
+}  
+
+.flow > * + * { 
+  margin-top: var(--flow-space);
 }
 
-article > * {
-  grid-column: 4;
-}
-
-figure {
-  grid-column-start: 2;
-  grid-column-end: -1;
-  margin: 20px 0;
-}
-
-article > blockquote {
-  grid-column: 3 / 5;
-  padding-left: 10px;
-  color: #666;
-  border-left: 3px solid black;
-}
-
-aside {
-  grid-column: 5 /7;
-  padding-left: 10px;
+h2 {
+  --flow-space: 3rem;
 }
