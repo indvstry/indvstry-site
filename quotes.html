@@ -8,35 +8,8 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="description" content="Home of Aris Karatarakis, personal playground and log log" />
   <meta property="og:url" content="https://www.indvstry.com">
-
-
-  <script type="application/ld+json"> { 
-      "context": "https://schema.org",
-      "@type": "Person",
-      "@id": "https://indvstry.com/meta#aris",
-      "name": "Aris Karatarakis",
-      "description": "Creative Generalist",
-      "url": "https://www.linkedin.com/in/ariskaratarakis",
-      "sameAs": [
-      "https://twitter.com/indvstry", "https://www.instagram.com/indvstry/", "https://github.com/indvstry", "https://glitch.com/@indvstry" ],
-      "affiliation": [
-      { 
-        "@type": "Organization",
-        "name": "thinking lpc",
-        "sameAs": [ "http://thinking.gr/", "https://www.facebook.com/wearethinking/" ]
-      },
-      {
-        "@type": "Organization",
-        "name": "vivl.io",
-        "sameAs": ["https://vivl.io/"]
-      }
-      ]
-      }
-    </script>
-  <link rel="canonical" href="https://www.indvstry.com/">
   <title>INDVSTRY &middot; playground and log</title>
 </head>
-
 <body>
   <!-- header -->
   <header>
@@ -55,16 +28,28 @@
   </header>
   <main>
     <section class="quotes">
-    <!-- Resources
+    <!-- Sources
       - https://alistapart.com/blog/post/more-thoughts-about-blockquotes-than-are-strictly-required/
-      - 
-    
-    -->  
-    <figure>
+      - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/blockquote
+    --> 
+    <!-- Encoding Notes
+      - use `@cite`  This attribute is intended to point to information explaining the context or the reference for the quote.
+      - use `<cite>` element only for “works” (books, articles, etc). see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/cite
+      - the citation doesn’t belong inside the blockquote ; according to the specification, the only content that can live inside a blockquote is the text being quoted.
+      - a semantic element to wrap this pattern (quote and citation) is the `<figure>` element
+    --> 
+
+    <figure class="quote">
+        <blockquote cite="https://www.gutenberg.org/files/74/old/orig74-h/p1.htm#:~:text=work%20consists%20of%20whatever%20a%20body%20is%20obliged%20to%20do%2C%20and%20that%20play%20consists%20of%20whatever%20a%20body%20is%20not%20obliged%20to%20do.">
+            <p>Work consists of whatever a body is OBLIGED to do, and that Play consists of whatever a body is not obliged to do.</p>
+        </blockquote>
+        <figcaption><p class="quote-citation">Mark Twain, <cite><a href="https://www.gutenberg.org/files/74/old/orig74-h/p1.htm">The Adventures of Tom Sawyer</a></cite></p></figcaption>
+    </figure>
+    <figure class="quote">
         <blockquote cite="https://www.huxley.net/bnw/four.html">
             <p>Words can be like X-rays, if you use them properly—they’ll go through anything. You read and you’re pierced.</p>
         </blockquote>
-        <figcaption>—Aldous Huxley, <cite>Brave New World</cite></figcaption>
+        <figcaption><p class="quote-citation">Aldous Huxley, <cite>Brave New World</cite></p></figcaption>
     </figure>
 
      
