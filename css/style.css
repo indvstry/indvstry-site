@@ -184,6 +184,10 @@ blockquote::before {
   top:-10px;
 }
 
+p.quote-citation::before {
+     content: "— ";
+}
+
 
 #redd {
   color:red;
