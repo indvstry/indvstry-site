@@ -35,6 +35,15 @@ html {
   box-sizing: content-box;
 }
 
+
+/* navigation */
+.listNav li {
+  display: inline;
+  padding-right: 2rem;
+}
+
+
+
 header {
   border-radius: 8px;
   padding: 0.5rem;
