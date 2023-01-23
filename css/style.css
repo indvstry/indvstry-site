@@ -45,7 +45,7 @@ html {
 li.crumbActive > a {
   text-decoration: none;
 }
-.crumbActive {
+[aria-current] {
   text-decoration-line: underline;
   text-decoration-style: wavy;
 
