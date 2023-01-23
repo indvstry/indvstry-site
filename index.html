@@ -38,9 +38,15 @@
 <body>
   <!-- header -->
   <header>
+    <!-- NAV 
+      - a nav element doesn't have to contain a list, 
+      it can contain other kinds of content e.g. prose:
+      see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav-
+      - [Building the main navigation for a website](https://web.dev/website-navigation)
+    -->
      <nav class="crumbs" id="navMain">
-      <ul class="listNav">
-        <li class="crumb"><a href="index.html">Home</a></li>
+      <ul class="listNav" role="list">
+        <li class="crumbActive active-"><a href="index.html" aria-current="page">Home</a></li>
         <li class="crumb"><a href="log.html">Log</a></li>
         <li class="crumb"><a href="resources.html">Resources</a></li>
       </ul>
@@ -54,11 +60,17 @@
     <section class="about">
       <header>
         <h2> About</h2>
-        <p>My name is Aris Karatarakis. I am a creative generalist based in Athens, Greece, currently working at <a href="https://www.thinking.gr">thinking.gr</a> in the fields of UX/UI and semantic encoding.</p>
-        <p>This website contains a mixture of articles, resources and web experiments. Feel free to look around!</p>
+        <p>A collection of articles, resources and  other notes. Feel free to look around!</p>
+        <h2>Who</h2>
+        <p>Hello, I'm <a href="aboutme.html">Aris</a>, a creative generalist based in Athens, Greece, currently working on UX/UI and semantic encoding projects at <a href="https://www.thinking.gr">thinking</a> </p>
+        
       </header>
     </section>
-    <section class="social">
+    
+  </main>
+
+  <footer>
+    <!-- <section class="social">
       <h2>Social links:</h2>
       <ul class="socialLinks">
         <li>
@@ -70,10 +82,7 @@
         <li><a href="https://github.com/indvstry">Github</a></li>
         <li><a href="https://www.instagram.com/indvstry/">Instagram</a></li>
       </ul>
-    </section>
-  </main>
-
-  <footer>
+    </section> -->
     <p>Handcrafted with ❤️️️ 2023</p>
   </footer>
 

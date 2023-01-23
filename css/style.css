@@ -39,7 +39,17 @@ html {
 /* navigation */
 .listNav li {
   display: inline;
-  padding-right: 2rem;
+  padding: .5rem;
+}
+
+li.crumbActive > a {
+  text-decoration: none;
+}
+.crumbActive {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+
+  
 }
 
 
@@ -94,7 +104,7 @@ h2 {
 /* lists */
 
 ul {
-  list-style-type: none;
+  list-style-type: none; /* this will disable voiceover in macos unless you add an @role to a list */
   padding-top: 1rem;
   padding-bottom: 1rem;
   padding-left: 0;
@@ -111,13 +121,23 @@ time + ul {
   padding:0;
 }
 
-.logEntry {padding-top: 4rem;}
+.logDay {padding-top: 4rem;}
 
 /* links */
 a {
   color: var(--text-color);
+  text-decoration: skip;
 }
 
+/* change color when hovering or tabbing */
+a:hover,
+a:focus {
+  background-color: var(--highlight-color);
+}
+
+a:active {
+  font-style: bold;
+}
 
 
 .highlight {
