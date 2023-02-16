@@ -104,7 +104,7 @@ h2 {
 /* lists */
 
 ul {
-  list-style-type: none; /* this will disable voiceover in macos unless you add an @role to a list */
+  /* list-style-type: none; dont use  this will disable voiceover in macos unless you add an @role to a list */
   padding-top: 1rem;
   padding-bottom: 1rem;
   padding-left: 0;
