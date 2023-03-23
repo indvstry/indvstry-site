@@ -52,8 +52,6 @@ li.crumbActive > a {
   
 }
 
-
-
 header {
   border-radius: 8px;
   padding: 0.5rem;
@@ -72,7 +70,7 @@ body {
   margin: auto;
   padding-left: 1rem;
   padding-right: 1rem;
-  border-top: 0.5rem solid var(--border-deco);
+  border-top: .5rem solid var(--border-deco);
   font-family: Georgia, serif;
 }
 
@@ -121,7 +119,11 @@ time + ul {
   padding:0;
 }
 
-.logDay {padding-top: 4rem;}
+.logMonth {
+  padding-top: 5rem;;
+}
+
+.logDay {padding-top: 1rem;}
 
 /* links */
 a {
