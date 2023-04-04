@@ -123,6 +123,10 @@ time + ul {
   padding-top: 5rem;;
 }
 
+.listDays {
+  background-color: rgb(203, 203, 235);
+}
+
 .logDay {padding-top: 1rem;}
 
 /* links */
