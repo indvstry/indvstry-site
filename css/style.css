@@ -124,7 +124,7 @@ time + ul {
 }
 
 .listDays {
-  background-color: rgb(203, 203, 235);
+  /* background-color: rgb(203, 203, 235); */
 }
 
 .logDay {padding-top: 1rem;}
