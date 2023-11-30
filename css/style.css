@@ -179,6 +179,15 @@ time {
   
 }
 
+
+.logItem p::before {
+  content: attr(datetime) " ";
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+
+
 footer {
   padding-top: 2rem;
 }
