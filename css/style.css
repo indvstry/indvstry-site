@@ -165,7 +165,6 @@ a:active {
 time {
   font-variant: small-caps;
   /* background-color: var(--tag-bg); */
-  border-top: 0.1rem solid var(--border-deco);
   color: var(--tag-text);
   padding-top: 1rem;
 
