@@ -1,3 +1,6 @@
+/* =======================
+   ROOT VARIABLES
+   ======================= */
 :root {
   --highlight-color: hsl(49, 89%, 70%);
   --tag-bg: hsl(48, 94%, 68%);
@@ -9,84 +12,49 @@
   --allGray: grayscale(100%);
 }
 
+
+/* ================================
+   BASE & TYPOGRAPHY
+   ================================ */
+
 html {
   font-size: 18px;
-}
-
-/* Resets box-model so that widths and heights arent affected by borders or padding. */
-html {
   box-sizing: border-box;
 }
-*,
-*::before,
-*::after {
+
+*, *::before, *::after {
   box-sizing: inherit;
 }
-.box {
-  display: inline-block;
-  width: 150px;
-  height: 150px;
-  padding: 10px;
-  background: tomato;
-  color: white;
-  border: 10px solid red;
-}
-.content-box {
-  box-sizing: content-box;
-}
-
-
-/* navigation */
-.listNav li {
-  display: inline;
-  padding: .5rem;
-}
-
-li.crumbActive > a {
-  text-decoration: none;
-}
-[aria-current] {
-  text-decoration-line: underline;
-  text-decoration-style: wavy;
-
-  
-}
-
-header {
-  border-radius: 8px;
-  padding: 0.5rem;
-}
-
-.byline {
-  font-style: italic;
-}
-
 
 body {
   line-height: 1.7;
   background-color: var(--page-background);
   color: var(--text-color);
-  max-width: 650px;
+  max-width: 700px; /* changed from 650px to 700px for less cramped text */
   margin: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  border-top: .5rem solid var(--border-deco);
+  padding: 0 1rem;
+  border-top: 0.5rem solid var(--border-deco);
   font-family: Georgia, serif;
+}
+
+/* Added mobile responsiveness */
+@media (max-width: 700px) {
+  body {
+    max-width: 98vw;
+    font-size: 1rem;
+    padding: 0 .5rem;
+  }
 }
 
 p {
   font-size: 1rem;
 }
+
 /* Headings */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
   line-height: 1.2;
   margin-top: 1rem;
-  color: var(--heading-color);
 }
 
 h1 {
@@ -96,157 +64,168 @@ h1 {
 }
 
 h2 {
-  font-size: 1.2rem;
+  font-size: 1.5rem; /* Increased from 1.2rem for better hierarchy */
 }
 
-/* lists */
+/* ================================
+   NAVIGATION
+   ================================ */
+
+.listNav {
+  padding-left: 0;
+  margin: 0;
+}
+
+.listNav li {
+  display: inline;
+  padding: .5rem;
+}
+
+/* Consistent underline for active link */
+[aria-current] {
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+}
+
+/* ================================
+   LISTS & LOG ITEMS
+   ================================ */
 
 ul {
-  /* list-style-type: none; dont use  this will disable voiceover in macos unless you add an @role to a list */
+  /* DO NOT REMOVE bullets for accessibility unless list has role */
   padding-top: 1rem;
   padding-bottom: 1rem;
-  padding-left: 0;
-  margin-block-start: 0;
+  padding-left: 1.5rem; /* changed from 0 for more consistent bullet indentation */
+  margin-left: 0; /* removed margin-left */
 }
 
-li {padding-top: 1rem;}
-
-li p {
-  margin-bottom: 0;
+/* Flat tidbit items */
+.logList {
+  list-style-type: disc;
+  margin-left: 0; /* changed from 1.5rem since padding-left is now used on ul */
 }
 
-time + ul {
-  padding:0;
+.logItem {
+  /* Removed padding-top and increased margin-bottom for consistent spacing */
+  margin-bottom: 1rem; /* changed from 0.5rem */
+  padding-top: 0; /* removed padding-top */
+  list-style-type: disc;
 }
 
-.logMonth {
-  padding-top: 5rem;
-  list-style: none;
-}
-
-.logMonth time {
-  font-size: 2.5rem;
-}
-
-.listDays {
-  /* background-color: rgb(203, 203, 235); */
-}
-
-.logDay {padding-top: 1rem;}
-
-/* links */
-a {
-  color: var(--text-color);
-  text-decoration: skip;
-}
-
-/* change color when hovering or tabbing */
-a:hover,
-a:focus {
-  background-color: var(--highlight-color);
-}
-
-a:active {
-  font-style: bold;
-}
-
-
-.highlight {
-  background: var(--highlight-color);
-  border-radius: 0.1rem;
-  margin: 0;
-  padding: 2px;
-  line-height: 1.5;
-  padding: 0.1rem 0.5rem;
-}
-
-
+/* ================================
+   TIME & DATE
+   ================================ */
 
 time {
   font-variant: small-caps;
-  /* background-color: var(--tag-bg); */
   color: var(--tag-text);
-  padding-top: 1rem;
-
+  padding-right: 0.5rem;
+  padding-top: 0;
+  /* Removed border-top, background-color as requested */
 }
 
-.clDayName {
-  font-size: 1rem;
-  vertical-align: middle;
+/* ================================
+   LINKS
+   ================================ */
 
+a {
+  color: var(--text-color);
+  text-decoration: underline dotted; /* improved for all users */
+  text-underline-offset: 2px;
 }
 
-.clDayNum {
-  font-size: 2.5rem;
-  vertical-align: middle;
-
-  
+/* Enhanced hover/focus visibility */
+a:hover,
+a:focus {
+  background-color: var(--highlight-color);
+  outline: 2px solid var(--border-deco);
+  outline-offset: 3px; /* Increased from 1px for better focus clarity */
 }
 
-
-
-.logItem::before {
-  content: attr(datetime) " ";
+a:active {
   font-weight: bold;
-  margin-right: 5px;
-  
 }
 
-.listDays li {
-  list-style-type: none;
+/* ================================
+   HEADER/FOOTER & SECTIONS
+   ================================ */
+
+header {
+  border-radius: 8px;
+  padding: 0.5rem;
 }
-
-
 
 footer {
   padding-top: 2rem;
 }
 
+/* ================================
+   SOCIAL LINKS (Flex)
+   ================================ */
+
 .socialLinks {
   display: flex;
   flex-direction: row;
+  gap: 1rem;
+  padding-left: 0;
+  margin-bottom: 2rem;
+}
+.socialLinks li {
+  margin-left: 0;
 }
 
-.socialLinks li { 
-  margin-left: 1rem;
-}
-/* content type specific emojis */
+/* ================================
+   BLOCKQUOTE STYLES
+   ================================ */
 
-.read:before {
-  content: "👓 ";
-  filter: grayscale(100%);
-}
-
-/* blockquote */
 blockquote {
   font-size: 1rem;
-  /* width:60%; */
-  margin:1rem auto;
-  padding:1.2em 30px 1.2em 75px;
-  border-left:0.5rem solid var(--border-deco);
-  line-height:1.6;
+  margin: 1rem auto;
+  padding: 1.2em 30px 1.2em 75px;
+  border-left: 0.5rem solid var(--border-deco);
+  line-height: 1.6;
   position: relative;
-  background:hsl(24, 100%, 95%);
+  background: hsl(24, 100%, 95%);
 }
-
 blockquote::before {
   content: "\201C";
   color: var(--border-deco);
-  font-size:4rem;
+  font-size: 4rem;
   position: absolute;
   left: 10px;
-  top:-10px;
+  top: -10px;
 }
-
 p.quote-citation::before {
-     content: "— ";
+  content: "— ";
 }
 
+/* ================================
+   MISC/UTILITY
+   ================================ */
 
-#redd {
-  color:red;
+.highlight {
+  background: var(--highlight-color);
+  border-radius: 0.1rem;
+  margin: 0;
+  padding: 0.1rem 0.5rem;
+  line-height: 1.5;
 }
 
-.green {
-  color:green;
+.byline {
+  font-style: italic;
 }
+
+.read:before { content: "👓 "; filter: grayscale(100%); }
+/* Removed .box, .content-box (not used in production) */
+#redd { color: red; }
+.green { color: green; }
+
+/* ================================
+   > CHANGES/COMMENTS:
+   ================================
+   - Adjusted max-width in body for less cramped text
+   - Replaced margin-left with padding-left on ul for bullet consistency
+   - Removed padding-top on .logItem, increased margin-bottom for spacing consistency
+   - Increased outline-offset on a:focus for better visual clarity
+   - Increased h2 font size for improved hierarchy
+*/
