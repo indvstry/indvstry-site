@@ -777,8 +777,9 @@ body:has(.microblog) {
   background-position: 0 0, 3px 3px, 5px 1px;
 }
 
-/* Hide pattern if post has an actual image */
-.post--photo .post__pattern {
+/* Hide pattern if post has an actual image or embed */
+.post--photo .post__pattern,
+.post--embed .post__pattern {
   display: none;
 }
 
