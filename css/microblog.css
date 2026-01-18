@@ -1,0 +1,835 @@
+/* =======================
+   MICROBLOG STYLES
+   Card-based design inspired by Claude blog
+   ======================= */
+
+/* ================================
+   PAGE OVERRIDE
+   ================================ */
+
+/* Override body max-width when microblog is present */
+body:has(.microblog) {
+  max-width: 1440px;
+  padding: 0 2rem;
+}
+
+@media (max-width: 640px) {
+  body:has(.microblog) {
+    padding: 0 1rem;
+  }
+}
+
+/* ================================
+   MAIN CONTAINER
+   ================================ */
+
+.microblog {
+  padding: 1.5rem 0;
+}
+
+.microblog > p {
+  color: var(--heading-color);
+  margin-bottom: 2rem;
+}
+
+/* ================================
+   YEAR SECTIONS
+   ================================ */
+
+.posts-year {
+  margin-bottom: 3rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.posts-year__heading {
+  grid-column: 1 / -1; /* Span all columns */
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--heading-color);
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+
+/* 2 columns on medium screens */
+@media (max-width: 1024px) {
+  .posts-year {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 1 column on small screens */
+@media (max-width: 640px) {
+  .posts-year {
+    grid-template-columns: 1fr;
+  }
+
+  .microblog {
+    padding: 1rem 0.75rem;
+  }
+}
+
+/* ================================
+   POST CARDS (Base)
+   ================================ */
+
+.post {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid hsl(210, 20%, 92%);
+}
+
+.post:hover {
+  box-shadow: 0 4px 20px hsla(210, 20%, 50%, 0.12);
+  transform: translateY(-3px);
+}
+
+.post__content {
+  padding: 1.25rem;
+}
+
+.post__content p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.post__content p + p {
+  margin-top: 0.75rem;
+}
+
+.post__meta {
+  padding: 0.75rem 1.25rem;
+  background: hsl(210, 20%, 98%);
+  border-top: 1px solid hsl(210, 20%, 94%);
+}
+
+.post__meta time {
+  font-size: 0.75rem;
+  color: var(--heading-color);
+  opacity: 0.6;
+  font-variant: normal;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* ================================
+   TEXT POST
+   ================================ */
+
+.post--text .post__content {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* ================================
+   PHOTO POST
+   ================================ */
+
+.post--photo .post__content {
+  padding: 0;
+}
+
+.post--photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.post--photo figcaption {
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  color: var(--heading-color);
+}
+
+.post--photo figure {
+  margin: 0;
+}
+
+/* ================================
+   QUOTE POST
+   ================================ */
+
+.post--quote {
+  background: linear-gradient(135deg, hsl(40, 60%, 97%) 0%, hsl(30, 50%, 96%) 100%);
+  border-color: hsl(40, 40%, 88%);
+}
+
+.post--quote .post__content {
+  padding: 1.5rem 1.25rem;
+  padding-left: 1.5rem;
+  border-left: 3px solid var(--border-deco);
+  margin: 0.75rem;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+.post--quote blockquote {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--text-color);
+}
+
+.post--quote blockquote::before {
+  display: none;
+}
+
+.post--quote blockquote p {
+  margin: 0;
+}
+
+.post--quote figure {
+  margin: 0;
+}
+
+.post--quote figcaption {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--heading-color);
+  font-style: normal;
+}
+
+.post__quote-author {
+  font-weight: 600;
+}
+
+.post--quote .post__meta {
+  background: hsl(40, 40%, 96%);
+  border-color: hsl(40, 40%, 90%);
+}
+
+/* ================================
+   LINK POST
+   ================================ */
+
+.post--link .post__link-card {
+  display: block;
+  text-decoration: none;
+}
+
+.post--link .post__link-card:hover,
+.post--link .post__link-card:focus {
+  background: transparent;
+  outline: none;
+}
+
+.post__link-title {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.4;
+  margin-bottom: 0.35rem;
+}
+
+.post--link:hover .post__link-title {
+  color: var(--heading-color);
+}
+
+.post__link-domain {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: white;
+  background: hsl(210, 20%, 65%);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+}
+
+.post__link-commentary {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+/* ================================
+   EMBED POST (iframe)
+   ================================ */
+
+.post--embed .post__content {
+  padding: 0;
+}
+
+.post__embed-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  background: hsl(210, 20%, 96%);
+}
+
+.post__embed-container--square {
+  padding-bottom: 100%;
+}
+
+.post__embed-container--portrait {
+  padding-bottom: 125%;
+}
+
+.post__embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.post__embed-caption {
+  padding: 1rem 1.25rem;
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--heading-color);
+}
+
+/* ================================
+   GEOMETRIC PATTERNS (auto-generated)
+   16 unique patterns that cycle
+   ================================ */
+
+.post__pattern {
+  height: 120px;
+  background-color: hsl(210, 10%, 96%);
+  background-size: 20px 20px;
+}
+
+/* Pattern 1: Diagonal stripes (thin) */
+.post:nth-child(50n+1) .post__pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(210, 10%, 20%) 0,
+    hsl(210, 10%, 20%) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+}
+
+/* Pattern 2: Grid */
+.post:nth-child(50n+2) .post__pattern {
+  background-image:
+    linear-gradient(hsl(210, 10%, 82%) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(210, 10%, 82%) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Pattern 3: Dots (small) */
+.post:nth-child(50n+3) .post__pattern {
+  background-image: radial-gradient(circle, hsl(210, 10%, 25%) 2px, transparent 2px);
+  background-size: 16px 16px;
+}
+
+/* Pattern 4: Checkerboard */
+.post:nth-child(50n+4) .post__pattern {
+  background-image:
+    linear-gradient(45deg, hsl(210, 10%, 88%) 25%, transparent 25%),
+    linear-gradient(-45deg, hsl(210, 10%, 88%) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, hsl(210, 10%, 88%) 75%),
+    linear-gradient(-45deg, transparent 75%, hsl(210, 10%, 88%) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
+
+/* Pattern 5: Horizontal lines */
+.post:nth-child(50n+5) .post__pattern {
+  background-image: repeating-linear-gradient(
+    0deg,
+    hsl(210, 10%, 25%) 0,
+    hsl(210, 10%, 25%) 1px,
+    transparent 1px,
+    transparent 8px
+  );
+}
+
+/* Pattern 6: Triangles */
+.post:nth-child(50n+6) .post__pattern {
+  background-image:
+    linear-gradient(135deg, hsl(210, 10%, 80%) 25%, transparent 25%),
+    linear-gradient(225deg, hsl(210, 10%, 80%) 25%, transparent 25%);
+  background-size: 24px 24px;
+}
+
+/* Pattern 7: Cross-hatch */
+.post:nth-child(50n+7) .post__pattern {
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      hsl(210, 10%, 85%) 8px,
+      hsl(210, 10%, 85%) 9px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 8px,
+      hsl(210, 10%, 85%) 8px,
+      hsl(210, 10%, 85%) 9px
+    );
+}
+
+/* Pattern 8: Zigzag */
+.post:nth-child(50n+8) .post__pattern {
+  background-image:
+    linear-gradient(135deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(225deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(45deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(315deg, hsl(210, 10%, 25%) 25%, transparent 25%);
+  background-size: 16px 16px;
+  background-position: 8px 0, 8px 0, 0 0, 0 0;
+}
+
+/* Pattern 9: Concentric circles */
+.post:nth-child(50n+9) .post__pattern {
+  background-image:
+    radial-gradient(circle, transparent 10px, hsl(210, 10%, 88%) 10px, hsl(210, 10%, 88%) 12px, transparent 12px),
+    radial-gradient(circle, transparent 20px, hsl(210, 10%, 88%) 20px, hsl(210, 10%, 88%) 22px, transparent 22px);
+  background-size: 50px 50px;
+}
+
+/* Pattern 10: Diamonds */
+.post:nth-child(50n+10) .post__pattern {
+  background-image:
+    linear-gradient(45deg, hsl(210, 10%, 25%) 12%, transparent 12%, transparent 88%, hsl(210, 10%, 25%) 88%),
+    linear-gradient(-45deg, hsl(210, 10%, 25%) 12%, transparent 12%, transparent 88%, hsl(210, 10%, 25%) 88%);
+  background-size: 24px 24px;
+}
+
+/* Pattern 11: Vertical stripes (thick) */
+.post:nth-child(50n+11) .post__pattern {
+  background-image: repeating-linear-gradient(
+    90deg,
+    hsl(210, 10%, 88%) 0,
+    hsl(210, 10%, 88%) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+}
+
+/* Pattern 12: Brick */
+.post:nth-child(50n+12) .post__pattern {
+  background-image:
+    linear-gradient(hsl(210, 10%, 80%) 2px, transparent 2px),
+    linear-gradient(90deg, hsl(210, 10%, 80%) 2px, transparent 2px),
+    linear-gradient(hsl(210, 10%, 80%) 2px, transparent 2px),
+    linear-gradient(90deg, hsl(210, 10%, 80%) 2px, transparent 2px);
+  background-size: 40px 20px, 40px 20px, 40px 20px, 40px 20px;
+  background-position: 0 0, 0 0, 20px 10px, 20px 10px;
+}
+
+/* Pattern 13: Polka dots (large) */
+.post:nth-child(50n+13) .post__pattern {
+  background-image:
+    radial-gradient(circle, hsl(210, 10%, 80%) 6px, transparent 6px),
+    radial-gradient(circle, hsl(210, 10%, 80%) 6px, transparent 6px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+}
+
+/* Pattern 14: Waves */
+.post:nth-child(50n+14) .post__pattern {
+  background-image:
+    radial-gradient(ellipse 30px 20px at 30px 0, transparent 28px, hsl(210, 10%, 85%) 28px, hsl(210, 10%, 85%) 30px, transparent 30px),
+    radial-gradient(ellipse 30px 20px at 0 20px, transparent 28px, hsl(210, 10%, 85%) 28px, hsl(210, 10%, 85%) 30px, transparent 30px);
+  background-size: 60px 40px;
+}
+
+/* Pattern 15: Plus signs */
+.post:nth-child(50n+15) .post__pattern {
+  background-image:
+    linear-gradient(hsl(210, 10%, 25%) 2px, transparent 2px),
+    linear-gradient(90deg, hsl(210, 10%, 25%) 2px, transparent 2px);
+  background-size: 24px 24px;
+  background-position: 10px 10px, 10px 10px;
+}
+
+/* Pattern 16: Diagonal stripes (thick, opposite) */
+.post:nth-child(50n+16) .post__pattern {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    hsl(210, 10%, 88%) 0,
+    hsl(210, 10%, 88%) 6px,
+    transparent 6px,
+    transparent 16px
+  );
+}
+
+/* Pattern 17: Herringbone */
+.post:nth-child(50n+17) .post__pattern {
+  background-image:
+    linear-gradient(45deg, hsl(210, 10%, 25%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 25%) 87.5%, hsl(210, 10%, 25%)),
+    linear-gradient(-45deg, hsl(210, 10%, 25%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 25%) 87.5%, hsl(210, 10%, 25%));
+  background-size: 8px 16px;
+}
+
+/* Pattern 18: Scales */
+.post:nth-child(50n+18) .post__pattern {
+  background-image:
+    radial-gradient(circle at 50% 0, transparent 70%, hsl(210, 10%, 85%) 70%, hsl(210, 10%, 85%) 75%, transparent 75%);
+  background-size: 24px 24px;
+}
+
+/* Pattern 19: Isometric cubes */
+.post:nth-child(50n+19) .post__pattern {
+  background-image:
+    linear-gradient(30deg, hsl(210, 10%, 88%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 88%) 87.5%),
+    linear-gradient(150deg, hsl(210, 10%, 88%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 88%) 87.5%),
+    linear-gradient(30deg, hsl(210, 10%, 88%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 88%) 87.5%),
+    linear-gradient(150deg, hsl(210, 10%, 88%) 12%, transparent 12.5%, transparent 87%, hsl(210, 10%, 88%) 87.5%),
+    linear-gradient(60deg, hsl(210, 10%, 82%) 25%, transparent 25.5%, transparent 75%, hsl(210, 10%, 82%) 75%);
+  background-size: 40px 70px;
+  background-position: 0 0, 0 0, 20px 35px, 20px 35px, 0 0;
+}
+
+/* Pattern 20: Dashed horizontal */
+.post:nth-child(50n+20) .post__pattern {
+  background-image: repeating-linear-gradient(
+    90deg,
+    hsl(210, 10%, 25%) 0,
+    hsl(210, 10%, 25%) 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  background-size: 100% 12px;
+}
+
+/* Pattern 21: Corner squares */
+.post:nth-child(50n+21) .post__pattern {
+  background-image:
+    linear-gradient(135deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(225deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(315deg, hsl(210, 10%, 25%) 25%, transparent 25%),
+    linear-gradient(45deg, hsl(210, 10%, 25%) 25%, transparent 25%);
+  background-size: 16px 16px;
+  background-position: -8px 0, -8px 0, 0 0, 0 0;
+}
+
+/* Pattern 22: Overlapping circles */
+.post:nth-child(50n+22) .post__pattern {
+  background-image:
+    radial-gradient(circle, hsl(210, 10%, 85%) 20%, transparent 20%),
+    radial-gradient(circle, hsl(210, 10%, 80%) 20%, transparent 20%);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+/* Pattern 23: Arrows right */
+.post:nth-child(50n+23) .post__pattern {
+  background-image:
+    linear-gradient(45deg, transparent 65%, hsl(210, 10%, 85%) 65%, hsl(210, 10%, 85%) 70%, transparent 70%),
+    linear-gradient(-45deg, transparent 65%, hsl(210, 10%, 85%) 65%, hsl(210, 10%, 85%) 70%, transparent 70%);
+  background-size: 20px 20px;
+  background-position: 0 10px, 0 0;
+}
+
+/* Pattern 24: Dotted grid */
+.post:nth-child(50n+24) .post__pattern {
+  background-image:
+    radial-gradient(circle, hsl(210, 10%, 70%) 1px, transparent 1px),
+    linear-gradient(hsl(210, 10%, 92%) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(210, 10%, 92%) 1px, transparent 1px);
+  background-size: 8px 8px, 24px 24px, 24px 24px;
+}
+
+/* Pattern 25: Stepped */
+.post:nth-child(50n+25) .post__pattern {
+  background-image:
+    linear-gradient(90deg, hsl(210, 10%, 88%) 50%, transparent 50%);
+  background-size: 16px 8px;
+  background-position: 0 0;
+}
+
+/* Pattern 26: Interlocking */
+.post:nth-child(50n+26) .post__pattern {
+  background-image:
+    linear-gradient(90deg, transparent 50%, hsl(210, 10%, 88%) 50%),
+    linear-gradient(90deg, hsl(210, 10%, 88%) 50%, transparent 50%);
+  background-size: 32px 16px;
+  background-position: 0 0, 16px 16px;
+}
+
+/* Pattern 27: Stars */
+.post:nth-child(50n+27) .post__pattern {
+  background-image:
+    radial-gradient(circle, hsl(210, 10%, 25%) 2px, transparent 2px),
+    linear-gradient(0deg, hsl(210, 10%, 25%) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(210, 10%, 25%) 1px, transparent 1px),
+    linear-gradient(45deg, hsl(210, 10%, 25%) 1px, transparent 1px),
+    linear-gradient(-45deg, hsl(210, 10%, 25%) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: 16px 16px, 16px 8px, 8px 16px, 16px 16px, 16px 16px;
+}
+
+/* Pattern 28: Dense dots */
+.post:nth-child(50n+28) .post__pattern {
+  background-image: radial-gradient(circle, hsl(210, 10%, 75%) 1.5px, transparent 1.5px);
+  background-size: 8px 8px;
+}
+
+/* Pattern 29: Wide stripes */
+.post:nth-child(50n+29) .post__pattern {
+  background-image: repeating-linear-gradient(
+    0deg,
+    hsl(210, 10%, 92%) 0,
+    hsl(210, 10%, 92%) 12px,
+    hsl(210, 10%, 98%) 12px,
+    hsl(210, 10%, 98%) 24px
+  );
+}
+
+/* Pattern 30: Basketweave */
+.post:nth-child(50n+30) .post__pattern {
+  background-image:
+    linear-gradient(45deg, hsl(210, 10%, 85%) 25%, transparent 25%),
+    linear-gradient(-45deg, hsl(210, 10%, 85%) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, hsl(210, 10%, 85%) 75%),
+    linear-gradient(-45deg, transparent 75%, hsl(210, 10%, 85%) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 0, 8px -8px, 0 8px;
+}
+
+/* Pattern 31: Maze */
+.post:nth-child(50n+31) .post__pattern {
+  background-image:
+    linear-gradient(90deg, hsl(210, 10%, 25%) 2px, transparent 2px),
+    linear-gradient(0deg, hsl(210, 10%, 25%) 2px, transparent 2px),
+    linear-gradient(90deg, transparent 12px, hsl(210, 10%, 25%) 12px, hsl(210, 10%, 25%) 14px, transparent 14px),
+    linear-gradient(0deg, transparent 12px, hsl(210, 10%, 25%) 12px, hsl(210, 10%, 25%) 14px, transparent 14px);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 0, 12px 0, 0 12px;
+}
+
+/* Pattern 32: Diagonal dash */
+.post:nth-child(50n+32) .post__pattern {
+  background-image: repeating-linear-gradient(
+    45deg,
+    hsl(210, 10%, 25%) 0,
+    hsl(210, 10%, 25%) 4px,
+    transparent 4px,
+    transparent 8px,
+    hsl(210, 10%, 25%) 8px,
+    hsl(210, 10%, 25%) 12px,
+    transparent 12px,
+    transparent 24px
+  );
+}
+
+/* Pattern 33: Topographic contours */
+.post:nth-child(50n+33) .post__pattern {
+  background-image:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 10px, hsl(210, 10%, 88%) 10px, hsl(210, 10%, 88%) 11px);
+}
+
+/* Pattern 34: Single-line wave */
+.post:nth-child(50n+34) .post__pattern {
+  background-image:
+    repeating-linear-gradient(0deg, transparent 0, transparent 19px, hsl(210, 10%, 85%) 19px, hsl(210, 10%, 85%) 20px);
+  background-size: 100% 20px;
+}
+
+/* Pattern 35: Scattered seeds */
+.post:nth-child(50n+35) .post__pattern {
+  background-image:
+    radial-gradient(ellipse 2px 4px at 10% 20%, hsl(210, 10%, 70%) 50%, transparent 50%),
+    radial-gradient(ellipse 2px 4px at 80% 60%, hsl(210, 10%, 70%) 50%, transparent 50%),
+    radial-gradient(ellipse 2px 4px at 40% 80%, hsl(210, 10%, 70%) 50%, transparent 50%),
+    radial-gradient(ellipse 2px 4px at 70% 30%, hsl(210, 10%, 70%) 50%, transparent 50%),
+    radial-gradient(ellipse 2px 4px at 20% 50%, hsl(210, 10%, 70%) 50%, transparent 50%);
+  background-size: 60px 60px;
+}
+
+/* Pattern 36: Fine crosshatch */
+.post:nth-child(50n+36) .post__pattern {
+  background-image:
+    repeating-linear-gradient(45deg, transparent, transparent 4px, hsl(210, 10%, 90%) 4px, hsl(210, 10%, 90%) 5px),
+    repeating-linear-gradient(-45deg, transparent, transparent 4px, hsl(210, 10%, 90%) 4px, hsl(210, 10%, 90%) 5px);
+}
+
+/* Pattern 37: Paper texture */
+.post:nth-child(50n+37) .post__pattern {
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0, hsla(210, 10%, 50%, 0.03) 1px, transparent 2px, transparent 4px),
+    repeating-linear-gradient(0deg, transparent 0, hsla(210, 10%, 50%, 0.03) 1px, transparent 2px, transparent 4px);
+  background-size: 4px 4px;
+}
+
+/* Pattern 38: Seigaiha (Japanese waves) */
+.post:nth-child(50n+38) .post__pattern {
+  background-image:
+    radial-gradient(circle at 50% 100%, transparent 50%, hsl(210, 10%, 88%) 50%, hsl(210, 10%, 88%) 55%, transparent 55%),
+    radial-gradient(circle at 50% 100%, transparent 30%, hsl(210, 10%, 88%) 30%, hsl(210, 10%, 88%) 35%, transparent 35%);
+  background-size: 32px 16px;
+}
+
+/* Pattern 39: Asanoha (hemp leaf) */
+.post:nth-child(50n+39) .post__pattern {
+  background-image:
+    linear-gradient(30deg, hsl(210, 10%, 88%) 12%, transparent 12.5%),
+    linear-gradient(150deg, hsl(210, 10%, 88%) 12%, transparent 12.5%),
+    linear-gradient(210deg, hsl(210, 10%, 88%) 12%, transparent 12.5%),
+    linear-gradient(330deg, hsl(210, 10%, 88%) 12%, transparent 12.5%),
+    linear-gradient(60deg, hsl(210, 10%, 85%) 25%, transparent 25.5%),
+    linear-gradient(120deg, hsl(210, 10%, 85%) 25%, transparent 25.5%);
+  background-size: 24px 42px;
+}
+
+/* Pattern 40: Sashiko stitch */
+.post:nth-child(50n+40) .post__pattern {
+  background-image:
+    repeating-linear-gradient(0deg, hsl(210, 10%, 25%) 0, hsl(210, 10%, 25%) 4px, transparent 4px, transparent 8px);
+  background-size: 16px 12px;
+}
+
+/* Pattern 41: Kikko (tortoiseshell hexagons) */
+.post:nth-child(50n+41) .post__pattern {
+  background-image:
+    linear-gradient(30deg, hsl(210, 10%, 88%) 25%, transparent 25%),
+    linear-gradient(-30deg, hsl(210, 10%, 88%) 25%, transparent 25%),
+    linear-gradient(150deg, hsl(210, 10%, 88%) 25%, transparent 25%),
+    linear-gradient(-150deg, hsl(210, 10%, 88%) 25%, transparent 25%);
+  background-size: 28px 48px;
+  background-position: 0 0, 14px 0, 0 24px, 14px 24px;
+}
+
+/* Pattern 42: Radial sunburst */
+.post:nth-child(50n+42) .post__pattern {
+  background-image:
+    repeating-conic-gradient(from 0deg, hsl(210, 10%, 92%) 0deg 10deg, hsl(210, 10%, 96%) 10deg 20deg);
+}
+
+/* Pattern 43: Concentric squares */
+.post:nth-child(50n+43) .post__pattern {
+  background-image:
+    linear-gradient(hsl(210, 10%, 88%) 2px, transparent 2px),
+    linear-gradient(90deg, hsl(210, 10%, 88%) 2px, transparent 2px),
+    linear-gradient(hsl(210, 10%, 88%) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(210, 10%, 88%) 1px, transparent 1px);
+  background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
+}
+
+/* Pattern 44: Offset circles */
+.post:nth-child(50n+44) .post__pattern {
+  background-image:
+    radial-gradient(circle, transparent 40%, hsl(210, 10%, 88%) 40%, hsl(210, 10%, 88%) 50%, transparent 50%);
+  background-size: 36px 36px;
+}
+
+/* Pattern 45: Triangle tessellation */
+.post:nth-child(50n+45) .post__pattern {
+  background-image:
+    linear-gradient(60deg, hsl(210, 10%, 96%) 50%, transparent 50%),
+    linear-gradient(-60deg, hsl(210, 10%, 92%) 50%, transparent 50%);
+  background-size: 24px 42px;
+}
+
+/* Pattern 46: Diamond lattice */
+.post:nth-child(50n+46) .post__pattern {
+  background-image:
+    linear-gradient(45deg, transparent 45%, hsl(210, 10%, 85%) 45%, hsl(210, 10%, 85%) 55%, transparent 55%),
+    linear-gradient(-45deg, transparent 45%, hsl(210, 10%, 85%) 45%, hsl(210, 10%, 85%) 55%, transparent 55%);
+  background-size: 20px 20px;
+}
+
+/* Pattern 47: Confetti scatter */
+.post:nth-child(50n+47) .post__pattern {
+  background-image:
+    linear-gradient(45deg, hsl(210, 10%, 75%) 2px, transparent 2px),
+    linear-gradient(-30deg, hsl(210, 10%, 80%) 3px, transparent 3px),
+    linear-gradient(60deg, hsl(210, 10%, 70%) 2px, transparent 2px);
+  background-size: 37px 29px, 43px 31px, 41px 27px;
+}
+
+/* Pattern 48: Squiggle lines */
+.post:nth-child(50n+48) .post__pattern {
+  background-image:
+    radial-gradient(ellipse 20px 8px at 10px 0, transparent 16px, hsl(210, 10%, 85%) 16px, hsl(210, 10%, 85%) 18px, transparent 18px),
+    radial-gradient(ellipse 20px 8px at 30px 16px, transparent 16px, hsl(210, 10%, 85%) 16px, hsl(210, 10%, 85%) 18px, transparent 18px);
+  background-size: 40px 32px;
+}
+
+/* Pattern 49: Random dashes */
+.post:nth-child(50n+49) .post__pattern {
+  background-image:
+    repeating-linear-gradient(90deg, hsl(210, 10%, 70%) 0, hsl(210, 10%, 70%) 6px, transparent 6px, transparent 20px),
+    repeating-linear-gradient(90deg, hsl(210, 10%, 75%) 0, hsl(210, 10%, 75%) 8px, transparent 8px, transparent 24px);
+  background-size: 100% 8px, 100% 16px;
+  background-position: 0 0, 10px 8px;
+}
+
+/* Pattern 50: Stipple gradient */
+.post:nth-child(50n+50) .post__pattern {
+  background-image:
+    radial-gradient(circle, hsl(210, 10%, 60%) 1px, transparent 1px),
+    radial-gradient(circle, hsl(210, 10%, 70%) 1px, transparent 1px),
+    radial-gradient(circle, hsl(210, 10%, 80%) 1px, transparent 1px);
+  background-size: 7px 7px, 13px 13px, 11px 11px;
+  background-position: 0 0, 3px 3px, 5px 1px;
+}
+
+/* Hide pattern if post has an actual image */
+.post--photo .post__pattern {
+  display: none;
+}
+
+/* ================================
+   TAGS (optional enhancement)
+   ================================ */
+
+.post__tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 0 1.25rem 1rem;
+}
+
+.post__tag {
+  font-size: 0.7rem;
+  color: var(--heading-color);
+  background: hsl(210, 20%, 95%);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.post__tag::before {
+  content: "#";
+  opacity: 0.5;
+}
+
+/* ================================
+   MOBILE RESPONSIVE
+   ================================ */
+
+@media (max-width: 700px) {
+  .post {
+    border-radius: 8px;
+  }
+
+  .post__content {
+    padding: 1rem;
+  }
+
+  .post__meta {
+    padding: 0.6rem 1rem;
+  }
+
+  .posts-year__heading {
+    font-size: 0.8rem;
+  }
+
+  .post__link-title {
+    font-size: 0.95rem;
+  }
+
+}
