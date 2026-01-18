@@ -1,23 +1,46 @@
-/* 
-Resources
-https://24ways.org/2018/managing-flow-and-rhythm-with-css-custom-properties/
+@import url('reset.css');
 
- */
- :root {
-   --text-color: hsl(210, 24%, 16%);
-   --heading-color: hsl(209, 18%, 30%);
-   --page-background: hsl(49,100%,96%);
 
+body {
+    font-family: 'Host Grotesk', sans-serif;
+    font-size: 16px;
 }
- .flow {
-    margin-top: 1em; /* for older browsers */
-  --flow-space: 1em;
-}  
-
-.flow > * + * { 
-  margin-top: var(--flow-space);
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
 }
 
 h2 {
-  --flow-space: 3rem;
+    font-size: 2em;
+    margin-bottom: 0.75em;
+}
+
+h3 {
+    font-size: 1.75em;
+    margin-bottom: 1em;
+}
+
+h4 {
+    font-size: 1.5em;
+    margin-bottom: 1.25em;
+}
+
+h5 {
+    font-size: 1.25em;
+    margin-bottom: 1.5em;
+}
+
+h6 {
+    font-size: 1em;
+    margin-bottom: 1.75em;
+}
+
+p {
+    font-size: 1em;
+    margin-bottom: 1.5em;
+}
+
+
+h2 {
+    color: blue;
 }
