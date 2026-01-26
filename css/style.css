@@ -1,15 +1,95 @@
 /* =======================
    ROOT VARIABLES
+   Light theme: Soft Black & White
    ======================= */
 :root {
-  --highlight-color: hsl(49, 89%, 70%);
-  --tag-bg: hsl(48, 94%, 68%);
-  --tag-text: hsl(15, 86%, 30%);
-  --text-color: hsl(210, 24%, 16%);
-  --heading-color: hsl(209, 18%, 30%);
-  --page-background: hsl(210,20%,98%);
-  --border-deco: hsl(42,87%,55%);
-  --allGray: grayscale(100%);
+  /* Lightest to darkest - neutral grays, softened */
+  --color-100: hsl(0, 0%, 97%);
+  --color-200: hsl(0, 0%, 94%);
+  --color-300: hsl(0, 0%, 85%);
+  --color-400: hsl(0, 0%, 60%);
+  --color-500: hsl(0, 0%, 45%);
+  --color-600: hsl(0, 0%, 35%);
+  --color-700: hsl(0, 0%, 25%);
+  --color-800: hsl(0, 0%, 18%);
+  --color-900: hsl(0, 0%, 15%);
+
+  /* Semantic mappings */
+  --page-background: var(--color-200);
+  --text-color: var(--color-900);
+  --text-muted: var(--color-600);
+  --heading-color: var(--color-800);
+  --highlight-color: var(--color-300);
+  --border-deco: var(--color-400);
+  --blockquote-bg: var(--color-100);
+  --tag-bg: var(--color-800);
+  --tag-text: var(--color-100);
+
+  /* Typography */
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Space Mono', monospace;
+  --font-serif: 'Zilla Slab', Georgia, serif;
+  --font-logo: 'Syne', sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Card colors */
+  --card-bg: var(--color-100);
+  --card-border: var(--color-300);
+  --card-shadow: var(--color-400);
+  --card-meta-bg: var(--color-200);
+  --card-meta-border: var(--color-300);
+  --quote-bg-start: var(--color-100);
+  --quote-bg-end: var(--color-200);
+  --quote-border: var(--color-700);
+  --quote-meta-bg: var(--color-200);
+  --link-domain-bg: var(--color-800);
+  --pattern-bg: var(--color-200);
+}
+
+/* =======================
+   DARK THEME: Blue (hue 215)
+   All colors derived from single hue
+   ======================= */
+[data-theme="blue"] {
+  --hue: 215;
+  --sat: 70%;
+  /* Lightest to darkest - all same hue, higher saturation at light end */
+  --color-100: hsl(var(--hue), 80%, 82%);
+  --color-200: hsl(var(--hue), 70%, 72%);
+  --color-300: hsl(var(--hue), var(--sat), 62%);
+  --color-400: hsl(var(--hue), var(--sat), 50%);
+  --color-500: hsl(var(--hue), var(--sat), 40%);
+  --color-600: hsl(var(--hue), var(--sat), 28%);
+  --color-700: hsl(var(--hue), var(--sat), 16%);
+  --color-800: hsl(var(--hue), var(--sat), 10%);
+  --color-900: hsl(var(--hue), 65%, 5%);
+
+  /* Semantic mappings - inverted for dark theme */
+  --page-background: var(--color-900);
+  --text-color: var(--color-200);
+  --text-muted: var(--color-400);
+  --heading-color: var(--color-400);
+  --highlight-color: var(--color-300);
+  --border-deco: var(--color-600);
+  --blockquote-bg: var(--color-800);
+  --tag-bg: var(--color-300);
+  --tag-text: var(--color-900);
+
+  /* Card colors */
+  --card-bg: var(--color-800);
+  --card-border: var(--color-700);
+  --card-shadow: var(--color-900);
+  --card-meta-bg: var(--color-900);
+  --card-meta-border: var(--color-700);
+  --quote-bg-start: var(--color-800);
+  --quote-bg-end: var(--color-700);
+  --quote-border: var(--color-300);
+  --quote-meta-bg: var(--color-800);
+  --link-domain-bg: var(--color-300);
+  --pattern-bg: var(--color-800);
 }
 
 
@@ -18,7 +98,7 @@
    ================================ */
 
 html {
-  font-size: 18px;
+  font-size: 17px;
   box-sizing: border-box;
 }
 
@@ -27,64 +107,158 @@ html {
 }
 
 body {
-  line-height: 1.7;
+  line-height: 1.5;
   background-color: var(--page-background);
   color: var(--text-color);
-  max-width: 700px; /* changed from 650px to 700px for less cramped text */
+  max-width: 800px;
   margin: auto;
-  padding: 0 1rem;
-  border-top: 0.5rem solid var(--border-deco);
-  font-family: Georgia, serif;
+  padding: 0 1.5rem;
+  border-top: none;
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.01em;
 }
 
 /* Added mobile responsiveness */
 @media (max-width: 700px) {
   body {
     max-width: 98vw;
-    font-size: 1rem;
-    padding: 0 .5rem;
+    font-size: 0.95rem;
+    padding: 0 1rem;
   }
 }
 
 p {
   font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
 }
 
-/* Headings */
+/* Headings - dramatic, compressed */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
   color: var(--heading-color);
-  line-height: 1.2;
-  margin-top: 1rem;
+  line-height: 0.95;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.03em;
 }
 
 h1 {
-  padding-top: 2rem;
-  font-size: 3rem;
-  letter-spacing: 0.8px;
+  padding-top: 3rem;
+  font-family: var(--font-logo);
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
 }
 
 h2 {
-  font-size: 1.5rem; /* Increased from 1.2rem for better hierarchy */
+  font-size: 2.25rem;
+  line-height: 1;
+  color: var(--text-muted);
+  font-weight: var(--font-weight-medium);
+  margin-top: 3rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-medium);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.intro {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+}
+
+/* Smaller screens - scale down dramatically */
+@media (max-width: 700px) {
+  h1 {
+    font-size: 2rem;
+    padding-top: 2rem;
+  }
+  h2 {
+    font-size: 1.75rem;
+  }
 }
 
 /* ================================
    NAVIGATION
    ================================ */
 
+.crumbs {
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border-deco);
+  margin-bottom: 1rem;
+}
+
 .listNav {
   padding-left: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.5rem;
+  list-style: none;
 }
 
 .listNav li {
   display: inline;
-  padding: .5rem;
+  padding: 0;
+}
+
+.listNav a {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  color: var(--text-muted);
+  transition: color 0.2s ease;
+}
+
+.listNav a:hover {
+  color: var(--heading-color);
+}
+
+.listNav a:focus {
+  color: var(--heading-color);
+  outline: 2px solid var(--heading-color);
+  outline-offset: 2px;
 }
 
 /* Consistent underline for active link */
 [aria-current] {
-  text-decoration-line: underline;
-  text-decoration-style: wavy;
+  color: var(--heading-color);
+  text-decoration: none;
+  position: relative;
+}
+
+[aria-current]::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--heading-color);
 }
 
 /* ================================
@@ -92,24 +266,32 @@ h2 {
    ================================ */
 
 ul {
-  /* DO NOT REMOVE bullets for accessibility unless list has role */
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  padding-left: 1.5rem; /* changed from 0 for more consistent bullet indentation */
-  margin-left: 0; /* removed margin-left */
+  padding: 0.5rem 0;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+ul li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
 }
 
 /* Flat tidbit items */
 .logList {
-  list-style-type: disc;
-  margin-left: 0; /* changed from 1.5rem since padding-left is now used on ul */
+  list-style-type: none;
+  padding-left: 0;
 }
 
 .logItem {
-  /* Removed padding-top and increased margin-bottom for consistent spacing */
-  margin-bottom: 1rem; /* changed from 0.5rem */
-  padding-top: 0; /* removed padding-top */
-  list-style-type: disc;
+  margin-bottom: 1rem;
+  padding-top: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-deco);
+  list-style-type: none;
+}
+
+.logItem:last-child {
+  border-bottom: none;
 }
 
 /* ================================
@@ -117,11 +299,11 @@ ul {
    ================================ */
 
 time {
-  font-variant: small-caps;
-  color: var(--tag-text);
-  padding-right: 0.5rem;
-  padding-top: 0;
-  /* Removed border-top, background-color as requested */
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-variant: normal;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 /* ================================
@@ -130,20 +312,25 @@ time {
 
 a {
   color: var(--text-color);
-  text-decoration: underline dotted; /* improved for all users */
-  text-underline-offset: 2px;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease;
 }
 
 /* Enhanced hover/focus visibility */
-a:hover,
+a:hover {
+  opacity: 0.6;
+}
+
 a:focus {
-  background-color: var(--highlight-color);
-  outline: 2px solid var(--border-deco);
-  outline-offset: 3px; /* Increased from 1px for better focus clarity */
+  opacity: 0.6;
+  outline: 2px solid var(--heading-color);
+  outline-offset: 2px;
 }
 
 a:active {
-  font-weight: bold;
+  opacity: 0.4;
 }
 
 /* ================================
@@ -151,12 +338,21 @@ a:active {
    ================================ */
 
 header {
-  border-radius: 8px;
-  padding: 0.5rem;
+  border-radius: 0;
+  padding: 0;
 }
 
 footer {
-  padding-top: 2rem;
+  padding: 3rem 0;
+  margin-top: 4rem;
+  border-top: 1px solid var(--border-deco);
+}
+
+footer p {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
 }
 
 /* ================================
@@ -166,12 +362,21 @@ footer {
 .socialLinks {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
-  padding-left: 0;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0;
   margin-bottom: 2rem;
+  list-style: none;
 }
 .socialLinks li {
-  margin-left: 0;
+  margin: 0;
+}
+.socialLinks a {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* ================================
@@ -179,23 +384,32 @@ footer {
    ================================ */
 
 blockquote {
-  font-size: 1rem;
-  margin: 1rem auto;
-  padding: 1.2em 30px 1.2em 75px;
-  border-left: 0.5rem solid var(--border-deco);
-  line-height: 1.6;
-  position: relative;
-  background: hsl(24, 100%, 95%);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: var(--font-weight-light);
+  line-height: 1.3;
+  margin: 2rem 0;
+  padding: 0;
+  padding-left: 1.5rem;
+  border-left: 2px solid var(--border-deco);
+  background: none;
+  color: var(--heading-color);
 }
 blockquote::before {
-  content: "\201C";
-  color: var(--border-deco);
-  font-size: 4rem;
-  position: absolute;
-  left: 10px;
-  top: -10px;
+  display: none;
 }
-p.quote-citation::before {
+blockquote p {
+  margin: 0;
+}
+p.quote-citation,
+figcaption {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 1rem;
+}
+p.quote-citation::before,
+figcaption::before {
   content: "— ";
 }
 
@@ -213,6 +427,37 @@ p.quote-citation::before {
 
 .byline {
   font-style: italic;
+}
+
+/* =======================
+   THEME TOGGLE
+   ======================= */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border-deco);
+  border-radius: 0;
+  padding: 0.35rem 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-medium);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.theme-toggle:hover {
+  background: var(--heading-color);
+  color: var(--page-background);
+  border-color: var(--heading-color);
+}
+
+.theme-toggle:focus {
+  background: var(--heading-color);
+  color: var(--page-background);
+  border-color: var(--heading-color);
+  outline: 2px solid var(--heading-color);
+  outline-offset: 2px;
 }
 
 .read:before { content: "👓 "; filter: grayscale(100%); }

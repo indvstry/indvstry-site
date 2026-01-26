@@ -3,92 +3,426 @@
 
 <head>
   <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Zilla+Slab:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/microblog.css" />
+  <script src="js/theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <meta name="description" content="Home of Aris Karatarakis, personal playground" />
+  <meta name="description" content="Aris Karatarakis - Creative Generalist, Athens. Curated links and thoughts." />
   <meta property="og:url" content="https://www.indvstry.com">
 
-  <script type="application/ld+json"> { 
-      "context": "https://schema.org",
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
       "@type": "Person",
-      "@id": "https://indvstry.com/meta#aris",
+      "@id": "https://indvstry.com/#aris",
       "name": "Aris Karatarakis",
+      "alternateName": "INDVSTRY",
       "description": "Creative Generalist",
-      "url": "https://www.linkedin.com/in/ariskaratarakis",
+      "url": "https://www.indvstry.com",
       "sameAs": [
-      "https://twitter.com/indvstry", "https://www.instagram.com/indvstry/", "https://github.com/indvstry", "https://glitch.com/@indvstry" ],
-      "affiliation": [
-      { 
+        "https://twitter.com/indvstry",
+        "https://www.instagram.com/indvstry/",
+        "https://github.com/indvstry",
+        "https://www.linkedin.com/in/ariskaratarakis/"
+      ],
+      "worksFor": {
         "@type": "Organization",
-        "name": "thinking lpc",
-        "sameAs": [ "http://thinking.gr/", "https://www.facebook.com/wearethinking/" ]
-      },
-      {
-        "@type": "Organization",
-        "name": "vivl.io",
-        "sameAs": ["https://vivl.io/"]
+        "name": "thinking",
+        "url": "https://www.thinking.gr"
       }
-      ]
-      }
+    }
     </script>
   <link rel="canonical" href="https://www.indvstry.com/">
-  <title>INDVSTRY &middot; playground and log</title>
+  <title>INDVSTRY &middot; Aris Karatarakis</title>
 </head>
 <body>
-  <!-- header -->
   <header>
-    <!-- NAV 
-      - a nav element doesn't have to contain a list, 
-      it can contain other kinds of content e.g. prose:
-      see: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/nav-
-      - [Building the main navigation for a website](https://web.dev/website-navigation)
-    -->
-     <nav class="crumbs" id="navMain">
+    <nav class="crumbs" id="navMain" aria-label="Main Navigation">
       <ul class="listNav" role="list">
         <li class="crumb"><a href="index.html" aria-current="page">Home</a></li>
-        <li class="crumb"><a href="tidbits.html">Tidbits</a></li>
-        <li class="crumb"><a href="resources.html">Resources</a></li>
+        <li class="crumb"><button class="theme-toggle" onclick="toggleTheme()">Dark</button></li>
       </ul>
     </nav>
     <div class="header-text">
-      <h1>A digital playground 🏖️
-      </h1>
+      <h1>INDVSTRY</h1>
+      <p class="subtitle">Aris Karatarakis · <a href="https://www.thinking.gr">thinking</a></p>
+      <p class="intro">Curated links and thoughts on design, technology, and the web.</p>
     </div>
   </header>
-  <main>
-    <section class="about">
-      <header>
-        <h2> About</h2>
-        <p>A collection of thoughts, resources and  other notes. Feel free to look around!</p>
-        <h2>Who</h2>
-        <p>Hello, I'm <a href="https://www.linkedin.com/in/ariskaratarakis">Aris</a>, a creative generalist based in Athens, Greece, currently working on UX/UI and semantic encoding projects at <a href="https://www.thinking.gr">thinking</a> </p>
-        
-      </header>
+
+  <main class="microblog">
+    <!-- 2026 -->
+    <section class="posts-year" aria-labelledby="year-2026">
+      <h2 id="year-2026" class="posts-year__heading">2026</h2>
+
+      <article class="post post--embed" id="post-20260118-1">
+        <div class="post__content">
+          <p class="post__embed-caption">Test Title</p>
+          <div class="post__embed-container">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/uh4Ebv2HWyw?si=jVAGQlOjYys91H7v" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          </div>
+          <p class="post__embed-caption">Test Desc</p>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2026-01-18">2026-01-18</time>
+        </footer>
+      </article>
     </section>
-    
+
+    <!-- 2023 -->
+    <section class="posts-year" aria-labelledby="year-2023">
+      <h2 id="year-2023" class="posts-year__heading">2023</h2>
+
+      <article class="post post--link" id="post-20231201-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://growth.design/case-studies/amber-alert-ux" class="post__link-card">
+            <span class="post__link-title">Is reddit the best source for product reviews??</span>
+          </a>
+          <span class="post__link-domain">growth.design</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-12-01">2023-12-01</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20231130-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://growth.design/case-studies/amber-alert-ux" class="post__link-card">
+            <span class="post__link-title">Amber Alerts, UX Improvements that could save lives</span>
+          </a>
+          <span class="post__link-domain">growth.design</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-11-30">2023-11-30</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20231129-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.youtube.com/clip/UgkxgZ5TG3Su2d_j-RVGDSQHA7ckHkJjh1Xk" class="post__link-card">
+            <span class="post__link-title">Summarising book content using language models</span>
+          </a>
+          <p class="post__link-commentary">Climbing the Ladder of Abstraction: Amelia Wattenberger</p>
+          <span class="post__link-domain">youtube.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-11-29">2023-11-29</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20230323-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="http://www.tolweb.org/tree/" class="post__link-card">
+            <span class="post__link-title">The Tree of Life Web Project</span>
+          </a>
+          <p class="post__link-commentary">Biodiversity, characteristics of different groups of organisms, and their evolutionary history.</p>
+          <span class="post__link-domain">tolweb.org</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-03-23">2023-03-23</time>
+        </footer>
+      </article>
+
+      <article class="post post--quote" id="post-20230312-1">
+        <div class="post__pattern"></div>
+        <figure class="post__content">
+          <blockquote>
+            <p>The truth is: I don't want to use a product at all.</p>
+          </blockquote>
+          <figcaption>
+            <cite><a href="https://uxdesign.cc/as-a-user-i-dont-want-to-973990a30158">uxdesign.cc</a></cite>
+          </figcaption>
+        </figure>
+        <footer class="post__meta">
+          <time datetime="2023-03-12">2023-03-12</time>
+        </footer>
+      </article>
+
+      <article class="post post--text" id="post-20230306-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <p>Nobody has been able to decipher Columbus' strange signature.</p>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-03-06">2023-03-06</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20230216-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://sun.blinry.org/" class="post__link-card">
+            <span class="post__link-title">Compass in the Sky</span>
+          </a>
+          <p class="post__link-commentary">Find the compass directions using the sun.</p>
+          <span class="post__link-domain">sun.blinry.org</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-02-16">2023-02-16</time>
+        </footer>
+      </article>
+
+      <article class="post post--quote" id="post-20230216-2">
+        <div class="post__pattern"></div>
+        <figure class="post__content">
+          <blockquote>
+            <p>The more you roam to unexpected urban places, the happier you are.</p>
+          </blockquote>
+          <figcaption>
+            <cite><a href="https://www.wsj.com/articles/the-emotional-benefits-of-wandering-11671131450">The Emotional Benefits of Wandering - WSJ</a></cite>
+          </figcaption>
+        </figure>
+        <footer class="post__meta">
+          <time datetime="2023-02-16">2023-02-16</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20230111-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://en.wikipedia.org/wiki/Ghost_in_the_Shell_(1995_film)" class="post__link-card">
+            <span class="post__link-title">Ghost in the Shell (1995)</span>
+          </a>
+          <p class="post__link-commentary">Rewatched this classic.</p>
+          <span class="post__link-domain">wikipedia.org</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-01-11">2023-01-11</time>
+        </footer>
+      </article>
+
+      <article class="post post--text" id="post-20230111-2">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <p>Started working on this website again.</p>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-01-11">2023-01-11</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20230101-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="http://info.cern.ch" class="post__link-card">
+            <span class="post__link-title">info.cern.ch</span>
+          </a>
+          <p class="post__link-commentary">Home of the first website.</p>
+          <span class="post__link-domain">cern.ch</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-01-01">2023-01-01</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20230101-2">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://mosfet.net/" class="post__link-card">
+            <span class="post__link-title">MOSFET</span>
+          </a>
+          <p class="post__link-commentary">A simple, ephemeral news source for keeping up with technological change.</p>
+          <span class="post__link-domain">mosfet.net</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2023-01-01">2023-01-01</time>
+        </footer>
+      </article>
+    </section>
+
+    <!-- 2021 -->
+    <section class="posts-year" aria-labelledby="year-2021">
+      <h2 id="year-2021" class="posts-year__heading">2021</h2>
+
+      <article class="post post--text" id="post-20211003-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <p>It's been a while :))</p>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2021-10-03">2021-10-03</time>
+        </footer>
+      </article>
+    </section>
+
+    <!-- 2019 -->
+    <section class="posts-year" aria-labelledby="year-2019">
+      <h2 id="year-2019" class="posts-year__heading">2019</h2>
+
+      <article class="post post--link" id="post-20190922-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.curbed.com/2017/1/24/14357842/crowd-counting-marches-strike-protest" class="post__link-card">
+            <span class="post__link-title">Crowd counting and cities</span>
+          </a>
+          <span class="post__link-domain">curbed.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-22">2019-09-22</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190921-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.youtube.com/watch?v=BJITkKaO0qA" class="post__link-card">
+            <span class="post__link-title">IBM Selectric typewriter review</span>
+          </a>
+          <p class="post__link-commentary">And how it works!</p>
+          <span class="post__link-domain">youtube.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-21">2019-09-21</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190921-2">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://practicaltypography.com/billionaires-typewriter.html" class="post__link-card">
+            <span class="post__link-title">The Billionaire's Typewriter</span>
+          </a>
+          <span class="post__link-domain">practicaltypography.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-21">2019-09-21</time>
+        </footer>
+      </article>
+
+      <article class="post post--quote" id="post-20190921-3">
+        <div class="post__pattern"></div>
+        <figure class="post__content">
+          <blockquote>
+            <p>Words can be like X-rays, if you use them properly—they'll go through anything. You read and you're pierced.</p>
+          </blockquote>
+          <figcaption>
+            <span class="post__quote-author">Aldous Huxley</span>, <cite>Brave New World</cite>
+          </figcaption>
+        </figure>
+        <footer class="post__meta">
+          <time datetime="2019-09-21">2019-09-21</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190921-4">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.youtube.com/watch?v=tnFPQ57l0Dg" class="post__link-card">
+            <span class="post__link-title">Matt Tomasello + skateboarding + bath salts = magic</span>
+          </a>
+          <span class="post__link-domain">youtube.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-21">2019-09-21</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190920-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.perkinselearning.org/technology/blog/how-do-people-vision-impairments-use-emoji" class="post__link-card">
+            <span class="post__link-title">How Do People with Vision Impairments use Emoji?</span>
+          </a>
+          <span class="post__link-domain">perkinselearning.org</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-20">2019-09-20</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190920-2">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://medium.muz.li/the-science-of-color-contrast-an-expert-designers-guide-33e84c41d156" class="post__link-card">
+            <span class="post__link-title">The Science of Color Contrast</span>
+          </a>
+          <p class="post__link-commentary">An expert designer's guide.</p>
+          <span class="post__link-domain">medium.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-20">2019-09-20</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190920-3">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://jxnblk.com/grays/" class="post__link-card">
+            <span class="post__link-title">Grays</span>
+          </a>
+          <p class="post__link-commentary">Ever wonder what the minimum color contrast ratio is for different font sizes?</p>
+          <span class="post__link-domain">jxnblk.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-20">2019-09-20</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190920-4">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://webrecorder.io/" class="post__link-card">
+            <span class="post__link-title">Webrecorder</span>
+          </a>
+          <p class="post__link-commentary">Free web archiving service.</p>
+          <span class="post__link-domain">webrecorder.io</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-20">2019-09-20</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190919-1">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="https://www.descript.com/overdub" class="post__link-card">
+            <span class="post__link-title">Descript Overdub</span>
+          </a>
+          <p class="post__link-commentary">Correct your voice recordings by typing.</p>
+          <span class="post__link-domain">descript.com</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-19">2019-09-19</time>
+        </footer>
+      </article>
+
+      <article class="post post--link" id="post-20190919-2">
+        <div class="post__pattern"></div>
+        <div class="post__content">
+          <a href="http://tilde.club/" class="post__link-card">
+            <span class="post__link-title">tilde.club</span>
+          </a>
+          <p class="post__link-commentary">Build awesome web pages in a tiny shared unix computer.</p>
+          <span class="post__link-domain">tilde.club</span>
+        </div>
+        <footer class="post__meta">
+          <time datetime="2019-09-19">2019-09-19</time>
+        </footer>
+      </article>
+    </section>
   </main>
 
-  
+  <section class="social" aria-labelledby="social-header">
+    <h2 id="social-header">Find me on:</h2>
+    <ul class="socialLinks">
+      <li><a href="https://www.linkedin.com/in/ariskaratarakis/" title="My LinkedIn Profile">LinkedIn</a></li>
+      <li><a href="https://twitter.com/INDVSTRY" title="Find me on Twitter">Twitter</a></li>
+      <li><a href="https://github.com/indvstry">Github</a></li>
+      <li><a href="https://www.instagram.com/indvstry/">Instagram</a></li>
+    </ul>
+  </section>
 
   <footer>
-    <!-- <section class="social">
-      <h2>Social links:</h2>
-      <ul class="socialLinks">
-        <li>
-          <a href="https://www.linkedin.com/in/ariskaratarakis/" title="My LinkedIn Profile">LinkedIn</a>
-        </li>
-        <li>
-          <a href="https://twitter.com/INDVSTRY" title="Find me on twitter">Twitter</a>
-        </li>
-        <li><a href="https://github.com/indvstry">Github</a></li>
-        <li><a href="https://www.instagram.com/indvstry/">Instagram</a></li>
-      </ul>
-    </section> -->
-    <p>Handcrafted with ❤️️️ 2023</p>
+    <p>Handcrafted with love</p>
   </footer>
-
-  <!-- <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> -->
 </body>
 
 </html>

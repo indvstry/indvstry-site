@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Zilla+Slab:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
+  <script src="js/theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta name="description" content="Aris Karatarakis, log" />
@@ -13,11 +17,11 @@
 <body>
   <!-- header -->
   <header>
-    <nav class="crumbs" id="navMain">
-      <ul class="listNav">
+    <nav class="crumbs" id="navMain" aria-label="Main Navigation">
+      <ul class="listNav" role="list">
         <li class="crumb"><a href="index.html">Home</a></li>
-        <li class="crumb"><a href="tidbits.html">Tidbits</a></li>
         <li class="crumb"><a href="resources.html" aria-current="page">Resources</a></li>
+        <li class="crumb"><button class="theme-toggle" onclick="toggleTheme()">Dark</button></li>
       </ul>
     </nav>
     <div class="header-text">

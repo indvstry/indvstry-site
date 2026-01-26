@@ -8,8 +8,12 @@
   <meta property="og:url" content="https://www.indvstry.com">
   <link rel="canonical" href="https://www.indvstry.com/tidbits">
   <title>INDVSTRY &middot; Tidbits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/microblog.css" />
+  <script src="js/theme.js"></script>
 </head>
 <body>
   <!-- header -->
@@ -19,6 +23,7 @@
         <li><a href="index.html">Home</a></li>
         <li><a href="tidbits.html" aria-current="page">Tidbits</a></li>
         <li><a href="resources.html">Resources</a></li>
+        <li><button class="theme-toggle" onclick="toggleTheme()">Dark</button></li>
       </ul>
     </nav>
     <div class="header-text">
@@ -35,9 +40,11 @@
 
       <article class="post post--embed" id="post-20260118-1">
         <div class="post__content">
+          <p class="post__embed-caption">Test Title</p>
           <div class="post__embed-container">
             <iframe width="560" height="315" src="https://www.youtube.com/embed/uh4Ebv2HWyw?si=jVAGQlOjYys91H7v" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           </div>
+          <p class="post__embed-caption">Test Desc</p>
         </div>
         <footer class="post__meta">
           <time datetime="2026-01-18">2026-01-18</time>
