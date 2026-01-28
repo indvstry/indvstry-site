@@ -737,11 +737,18 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       try {
         const data = JSON.parse(body);
+        console.log('\n--- ADD REQUEST ---');
+        console.log('Type:', data.type);
+        console.log('URL:', data.url);
+        const videoEmbed = getVideoEmbed(data.url);
+        console.log('Video embed detected:', videoEmbed ? videoEmbed.platform : 'none');
         const articleHtml = generateArticleHtml(data);
+        console.log('Generated HTML starts with:', articleHtml.substring(0, 100));
         insertTidbit(articleHtml, data.date);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
       } catch (err) {
+        console.error('Error:', err);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: err.message }));
       }
@@ -752,11 +759,17 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       try {
         const data = JSON.parse(body);
+        console.log('\n--- UPDATE REQUEST ---');
+        console.log('Type:', data.type);
+        console.log('URL:', data.url);
+        console.log('Edit ID:', data.editId);
         const articleHtml = generateArticleHtml(data, data.editId);
+        console.log('Generated HTML starts with:', articleHtml.substring(0, 100));
         const success = updateTidbit(data.editId, articleHtml);
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success }));
       } catch (err) {
+        console.error('Error:', err);
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: err.message }));
       }
