@@ -204,7 +204,8 @@ async function generateArticleHtml(data, existingId = null) {
           <a href="${url}" target="_blank" rel="noopener" class="post__embed-preview">
             <img src="${thumbUrl}" alt="${escapeHtml(title || oembed.title)}" loading="lazy">
             <span class="post__embed-play"></span>
-          </a>${description ? `
+          </a>
+          <span class="post__embed-source">tiktok.com</span>${description ? `
           <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
 
           return `
@@ -222,11 +223,13 @@ async function generateArticleHtml(data, existingId = null) {
 
       // YouTube, X, Instagram: use iframe/embed
       if (videoEmbed.embed) {
+        const domain = extractDomain(url);
         contentHtml = `
           ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
           <div class="${videoEmbed.containerClass}">
             ${videoEmbed.embed}
-          </div>${description ? `
+          </div>
+          <span class="post__embed-source">${domain}</span>${description ? `
           <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
 
         return `
