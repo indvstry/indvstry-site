@@ -359,11 +359,37 @@ body:has(.microblog) {
   filter: none;
 }
 
-/* Disable filters for social embeds - their scripts don't like it */
+/* Overlay approach for social embeds - filters break their scripts */
 .post__embed-container--tiktok,
 .post__embed-container--tweet,
 .post__embed-container--instagram {
   filter: none !important;
+  position: relative;
+}
+
+/* Monochromatic overlay for social embeds */
+.post__embed-container--tiktok::before,
+.post__embed-container--tweet::before,
+.post__embed-container--instagram::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--page-background);
+  opacity: 0.7;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+/* Reveal on hover */
+.post--embed:hover .post__embed-container--tiktok::before,
+.post--embed:hover .post__embed-container--tweet::before,
+.post--embed:hover .post__embed-container--instagram::before {
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* TikTok embed styling - scaled down to fit */
