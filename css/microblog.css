@@ -394,7 +394,7 @@ body:has(.microblog) {
 
 /* TikTok embed styling - scaled down to fit */
 .post__embed-container--tiktok {
-  position: static;
+  position: relative;
   padding-bottom: 0;
   height: auto;
   overflow: hidden;
