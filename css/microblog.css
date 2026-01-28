@@ -415,17 +415,24 @@ body:has(.microblog) {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 2.5rem;
-  color: white;
   background: rgba(0, 0, 0, 0.5);
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   transition: background 0.3s ease;
   pointer-events: none;
+}
+
+/* CSS triangle for play icon */
+.post__embed-play::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 54%;
+  transform: translate(-50%, -50%);
+  border-style: solid;
+  border-width: 10px 0 10px 18px;
+  border-color: transparent transparent transparent white;
 }
 
 .post--embed:hover .post__embed-play {

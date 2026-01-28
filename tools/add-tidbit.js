@@ -203,7 +203,7 @@ async function generateArticleHtml(data, existingId = null) {
           ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
           <a href="${url}" target="_blank" rel="noopener" class="post__embed-preview">
             <img src="${thumbUrl}" alt="${escapeHtml(title || oembed.title)}" loading="lazy">
-            <span class="post__embed-play">▶</span>
+            <span class="post__embed-play"></span>
           </a>${description ? `
           <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
 
