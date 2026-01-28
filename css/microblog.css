@@ -442,7 +442,6 @@ body:has(.microblog) {
 /* Twitter/X embed styling */
 .post__embed-container--tweet {
   padding-bottom: 0; /* Let tweet determine height */
-  position: static;
 }
 
 .post__embed-container--tweet .twitter-tweet {
@@ -452,7 +451,6 @@ body:has(.microblog) {
 /* Instagram embed styling */
 .post__embed-container--instagram {
   padding-bottom: 0; /* Let instagram determine height */
-  position: static;
 }
 
 .post__embed-container--instagram .instagram-media {
