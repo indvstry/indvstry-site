@@ -351,7 +351,7 @@ body:has(.microblog) {
 
 /* Blue-tinted monochrome for dark theme */
 [data-theme="blue"] .post--embed .post__embed-container {
-  filter: grayscale(1) sepia(0.3) hue-rotate(180deg) brightness(0.9);
+  filter: grayscale(1) sepia(1) hue-rotate(180deg) saturate(0.7);
 }
 
 /* Reveal full colors on hover */
