@@ -167,8 +167,25 @@ body:has(.microblog) {
    ================================ */
 
 .post--quote {
-  background: linear-gradient(135deg, var(--quote-bg-start) 0%, var(--quote-bg-end) 100%);
-  border-color: var(--quote-border);
+  background: transparent;
+  border: none;
+}
+
+/* Organic tilt for quotes - varied rotations */
+.post--quote:nth-child(4n+1) {
+  transform: rotate(-1.5deg);
+}
+
+.post--quote:nth-child(4n+2) {
+  transform: rotate(1deg);
+}
+
+.post--quote:nth-child(4n+3) {
+  transform: rotate(2deg);
+}
+
+.post--quote:nth-child(4n+4) {
+  transform: rotate(-0.5deg);
 }
 
 .post--quote .post__content {
@@ -241,8 +258,8 @@ body:has(.microblog) {
 }
 
 .post--quote .post__meta {
-  background: var(--quote-meta-bg);
-  border-color: var(--quote-border);
+  background: transparent;
+  border: none;
 }
 
 /* ================================
@@ -326,6 +343,22 @@ body:has(.microblog) {
   border: none;
 }
 
+/* Monochromatic overlay for video embeds - reduces visual noise */
+.post--embed .post__embed-container {
+  filter: grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+/* Blue-tinted monochrome for dark theme */
+[data-theme="blue"] .post--embed .post__embed-container {
+  filter: grayscale(1) sepia(0.3) hue-rotate(180deg) brightness(0.9);
+}
+
+/* Reveal full colors on hover */
+.post--embed:hover .post__embed-container {
+  filter: none;
+}
+
 .post__embed-caption {
   padding: 1rem 1.25rem;
   margin: 0;
@@ -337,91 +370,96 @@ body:has(.microblog) {
 /* ================================
    GEOMETRIC PATTERNS (minimal set)
    8 clean patterns that cycle
+   Full card background for text/link posts
    ================================ */
 
+/* Hide the pattern div - patterns now applied to card background */
 .post__pattern {
-  height: 100px;
-  background-color: var(--pattern-bg);
-  background-size: 20px 20px;
+  display: none;
+}
+
+/* Pattern color with built-in transparency for subtle effect */
+:root {
+  --pattern-line: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="blue"] {
+  --pattern-line: rgba(255, 255, 255, 0.08);
 }
 
 /* Pattern 1: Fine grid */
-.post:nth-child(8n+1) .post__pattern {
+.post--text:nth-child(8n+1),
+.post--link:nth-child(8n+1) {
   background-image:
-    linear-gradient(var(--text-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--text-color) 1px, transparent 1px);
+    linear-gradient(var(--pattern-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pattern-line) 1px, transparent 1px);
   background-size: 12px 12px;
-  opacity: 0.08;
+  background-position: 0 0;
 }
 
 /* Pattern 2: Grid */
-.post:nth-child(8n+2) .post__pattern {
+.post--text:nth-child(8n+2),
+.post--link:nth-child(8n+2) {
   background-image:
-    linear-gradient(var(--text-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--text-color) 1px, transparent 1px);
+    linear-gradient(var(--pattern-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pattern-line) 1px, transparent 1px);
   background-size: 24px 24px;
-  opacity: 0.1;
+  background-position: 0 0;
 }
 
 /* Pattern 3: Dots */
-.post:nth-child(8n+3) .post__pattern {
-  background-image: radial-gradient(circle, var(--text-color) 1.5px, transparent 1.5px);
+.post--text:nth-child(8n+3),
+.post--link:nth-child(8n+3) {
+  background-image: radial-gradient(circle, var(--pattern-line) 1.5px, transparent 1.5px);
   background-size: 16px 16px;
-  opacity: 0.2;
 }
 
 /* Pattern 4: Horizontal lines */
-.post:nth-child(8n+4) .post__pattern {
+.post--text:nth-child(8n+4),
+.post--link:nth-child(8n+4) {
   background-image: repeating-linear-gradient(
     0deg,
-    var(--text-color) 0,
-    var(--text-color) 1px,
+    var(--pattern-line) 0,
+    var(--pattern-line) 1px,
     transparent 1px,
     transparent 10px
   );
-  opacity: 0.12;
 }
 
 /* Pattern 5: Vertical lines */
-.post:nth-child(8n+5) .post__pattern {
+.post--text:nth-child(8n+5),
+.post--link:nth-child(8n+5) {
   background-image: repeating-linear-gradient(
     90deg,
-    var(--text-color) 0,
-    var(--text-color) 1px,
+    var(--pattern-line) 0,
+    var(--pattern-line) 1px,
     transparent 1px,
     transparent 10px
   );
-  opacity: 0.12;
 }
 
 /* Pattern 6: Cross */
-.post:nth-child(8n+6) .post__pattern {
+.post--text:nth-child(8n+6),
+.post--link:nth-child(8n+6) {
   background-image:
-    linear-gradient(var(--text-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--text-color) 1px, transparent 1px);
+    linear-gradient(var(--pattern-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--pattern-line) 1px, transparent 1px);
   background-size: 32px 32px;
   background-position: center center;
-  opacity: 0.08;
 }
 
 /* Pattern 7: Dense dots */
-.post:nth-child(8n+7) .post__pattern {
-  background-image: radial-gradient(circle, var(--text-color) 1px, transparent 1px);
+.post--text:nth-child(8n+7),
+.post--link:nth-child(8n+7) {
+  background-image: radial-gradient(circle, var(--pattern-line) 1px, transparent 1px);
   background-size: 8px 8px;
-  opacity: 0.12;
 }
 
 /* Pattern 8: Sparse dots */
-.post:nth-child(8n+8) .post__pattern {
-  background-image: radial-gradient(circle, var(--text-color) 2px, transparent 2px);
+.post--text:nth-child(8n+8),
+.post--link:nth-child(8n+8) {
+  background-image: radial-gradient(circle, var(--pattern-line) 2px, transparent 2px);
   background-size: 32px 32px;
-  opacity: 0.15;
-}
-/* Hide pattern if post has an actual image, embed, or is a quote */
-.post--photo .post__pattern,
-.post--embed .post__pattern,
-.post--quote .post__pattern {
-  display: none;
 }
 
 /* ================================
