@@ -359,15 +359,31 @@ body:has(.microblog) {
   filter: none;
 }
 
-/* TikTok embed styling */
-.post__embed-container .tiktok-embed {
+/* Disable filters for social embeds - their scripts don't like it */
+.post__embed-container--tiktok,
+.post__embed-container--tweet,
+.post__embed-container--instagram {
+  filter: none !important;
+}
+
+/* TikTok embed styling - override absolute positioning */
+.post__embed-container--tiktok {
+  position: static;
+  padding-bottom: 0;
+  height: auto;
+  min-height: 400px;
+}
+
+.post__embed-container--tiktok .tiktok-embed {
   margin: 0 !important;
-  min-width: 100% !important;
   max-width: 100% !important;
 }
 
-.post__embed-container--tiktok {
-  padding-bottom: 177%; /* 9:16 portrait ratio */
+.post__embed-container--tiktok iframe {
+  position: static !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 700px;
 }
 
 /* Twitter/X embed styling */
