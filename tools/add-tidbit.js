@@ -37,7 +37,7 @@ function getVideoEmbed(url) {
     return {
       platform: 'tiktok',
       containerClass: 'post__embed-container post__embed-container--tiktok',
-      embed: `<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@${username}/video/${videoId}" data-video-id="${videoId}" style="max-width:605px;min-width:325px;"><section></section></blockquote>`
+      embed: `<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@${username}/video/${videoId}" data-video-id="${videoId}" data-autoplay="false" style="max-width:605px;min-width:325px;"><section></section></blockquote>`
     };
   }
 

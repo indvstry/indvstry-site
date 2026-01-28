@@ -366,24 +366,23 @@ body:has(.microblog) {
   filter: none !important;
 }
 
-/* TikTok embed styling - override absolute positioning */
+/* TikTok embed styling - scaled down to fit */
 .post__embed-container--tiktok {
   position: static;
   padding-bottom: 0;
   height: auto;
-  min-height: 400px;
+  overflow: hidden;
 }
 
 .post__embed-container--tiktok .tiktok-embed {
   margin: 0 !important;
-  max-width: 100% !important;
+  transform: scale(0.8);
+  transform-origin: top left;
+  max-width: 125%; /* compensate for 0.8 scale */
 }
 
 .post__embed-container--tiktok iframe {
   position: static !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 700px;
 }
 
 /* Twitter/X embed styling */
