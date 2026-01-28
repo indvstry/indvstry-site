@@ -1,6 +1,9 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
+
+const PREVIEWS_DIR = path.join(__dirname, '..', 'images', 'previews');
 
 const PORT = 3333;
 const TIDBITS_PATH = path.join(__dirname, '..', 'index.html');
@@ -13,6 +16,39 @@ function extractDomain(url) {
   } catch {
     return '';
   }
+}
+
+// Fetch oEmbed data from TikTok
+function fetchOEmbed(url) {
+  return new Promise((resolve, reject) => {
+    const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+    https.get(oembedUrl, (res) => {
+      let data = '';
+      res.on('data', chunk => { data += chunk; });
+      res.on('end', () => {
+        try { resolve(JSON.parse(data)); }
+        catch (e) { reject(e); }
+      });
+    }).on('error', reject);
+  });
+}
+
+// Download image from URL, following redirects
+function downloadImage(imageUrl, destPath) {
+  return new Promise((resolve, reject) => {
+    const get = (url) => {
+      https.get(url, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          get(res.headers.location);
+          return;
+        }
+        const fileStream = fs.createWriteStream(destPath);
+        res.pipe(fileStream);
+        fileStream.on('finish', () => { fileStream.close(); resolve(); });
+      }).on('error', reject);
+    };
+    get(imageUrl);
+  });
 }
 
 // Detect video/social platform and return embed code
@@ -29,15 +65,15 @@ function getVideoEmbed(url) {
     };
   }
 
-  // TikTok detection
+  // TikTok detection - returns async flag for thumbnail fetch
   const ttMatch = url.match(/tiktok\.com\/@([^/]+)\/video\/(\d+)/);
   if (ttMatch) {
-    const username = ttMatch[1];
     const videoId = ttMatch[2];
     return {
       platform: 'tiktok',
-      containerClass: 'post__embed-container post__embed-container--tiktok',
-      embed: `<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@${username}/video/${videoId}" data-video-id="${videoId}" data-autoplay="false" style="max-width:605px;min-width:325px;"><section></section></blockquote>`
+      videoId,
+      async: true,
+      containerClass: 'post__embed-container post__embed-container--tiktok'
     };
   }
 
@@ -138,7 +174,7 @@ function generatePostId(dateStr, html) {
 }
 
 // Generate article HTML based on type
-function generateArticleHtml(data, existingId = null) {
+async function generateArticleHtml(data, existingId = null) {
   const { type, url, title, description, body, date } = data;
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
   const postId = existingId || generatePostId(date, html);
@@ -150,16 +186,28 @@ function generateArticleHtml(data, existingId = null) {
     const videoEmbed = getVideoEmbed(url);
 
     if (videoEmbed) {
-      // Auto-convert to embed post
-      contentHtml = `
+      // TikTok: fetch thumbnail via oEmbed
+      if (videoEmbed.platform === 'tiktok') {
+        try {
+          console.log('Fetching TikTok oEmbed data...');
+          const oembed = await fetchOEmbed(url);
+          const thumbFilename = `tiktok-${videoEmbed.videoId}.jpg`;
+          const thumbPath = path.join(PREVIEWS_DIR, thumbFilename);
+          const thumbUrl = `images/previews/${thumbFilename}`;
+
+          console.log('Downloading thumbnail...');
+          await downloadImage(oembed.thumbnail_url, thumbPath);
+          console.log('Thumbnail saved to', thumbPath);
+
+          contentHtml = `
           ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
-          <div class="${videoEmbed.containerClass}">
-            ${videoEmbed.embed}
-          </div>${description ? `
+          <a href="${url}" target="_blank" rel="noopener" class="post__embed-preview">
+            <img src="${thumbUrl}" alt="${escapeHtml(title || oembed.title)}" loading="lazy">
+            <span class="post__embed-play">▶</span>
+          </a>${description ? `
           <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
 
-      // Return embed-style article
-      return `
+          return `
       <article class="post post--embed" id="${postId}">
         <div class="post__content">${contentHtml}
         </div>
@@ -167,6 +215,29 @@ function generateArticleHtml(data, existingId = null) {
           <time datetime="${date}">${date}</time>
         </footer>
       </article>`;
+        } catch (err) {
+          console.error('TikTok oEmbed failed, falling back to link:', err.message);
+        }
+      }
+
+      // YouTube, X, Instagram: use iframe/embed
+      if (videoEmbed.embed) {
+        contentHtml = `
+          ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
+          <div class="${videoEmbed.containerClass}">
+            ${videoEmbed.embed}
+          </div>${description ? `
+          <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
+
+        return `
+      <article class="post post--embed" id="${postId}">
+        <div class="post__content">${contentHtml}
+        </div>
+        <footer class="post__meta">
+          <time datetime="${date}">${date}</time>
+        </footer>
+      </article>`;
+      }
     }
 
     // Regular link post
@@ -734,7 +805,7 @@ const server = http.createServer((req, res) => {
   } else if (req.method === 'POST' && req.url === '/add') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         const data = JSON.parse(body);
         console.log('\n--- ADD REQUEST ---');
@@ -742,7 +813,7 @@ const server = http.createServer((req, res) => {
         console.log('URL:', data.url);
         const videoEmbed = getVideoEmbed(data.url);
         console.log('Video embed detected:', videoEmbed ? videoEmbed.platform : 'none');
-        const articleHtml = generateArticleHtml(data);
+        const articleHtml = await generateArticleHtml(data);
         console.log('Generated HTML starts with:', articleHtml.substring(0, 100));
         insertTidbit(articleHtml, data.date);
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -756,14 +827,14 @@ const server = http.createServer((req, res) => {
   } else if (req.method === 'POST' && req.url === '/update') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
+    req.on('end', async () => {
       try {
         const data = JSON.parse(body);
         console.log('\n--- UPDATE REQUEST ---');
         console.log('Type:', data.type);
         console.log('URL:', data.url);
         console.log('Edit ID:', data.editId);
-        const articleHtml = generateArticleHtml(data, data.editId);
+        const articleHtml = await generateArticleHtml(data, data.editId);
         console.log('Generated HTML starts with:', articleHtml.substring(0, 100));
         const success = updateTidbit(data.editId, articleHtml);
         res.writeHead(200, { 'Content-Type': 'application/json' });

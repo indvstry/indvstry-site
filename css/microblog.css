@@ -359,16 +359,13 @@ body:has(.microblog) {
   filter: none;
 }
 
-/* Overlay approach for social embeds - filters break their scripts */
-.post__embed-container--tiktok,
+/* Overlay approach for social embeds (tweet/instagram) - filters break their scripts */
 .post__embed-container--tweet,
 .post__embed-container--instagram {
   filter: none !important;
   position: relative;
 }
 
-/* Monochromatic overlay for social embeds */
-.post__embed-container--tiktok::before,
 .post__embed-container--tweet::before,
 .post__embed-container--instagram::before {
   content: '';
@@ -384,31 +381,55 @@ body:has(.microblog) {
   transition: opacity 0.3s ease;
 }
 
-/* Reveal on hover */
-.post--embed:hover .post__embed-container--tiktok::before,
 .post--embed:hover .post__embed-container--tweet::before,
 .post--embed:hover .post__embed-container--instagram::before {
   opacity: 0;
+}
+
+/* Video thumbnail preview card */
+.post__embed-preview {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.post__embed-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+[data-theme="blue"] .post__embed-preview img {
+  filter: grayscale(1) sepia(1) hue-rotate(180deg) saturate(0.7);
+}
+
+.post--embed:hover .post__embed-preview img {
+  filter: none;
+}
+
+.post__embed-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2.5rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.3s ease;
   pointer-events: none;
 }
 
-/* TikTok embed styling - scaled down to fit */
-.post__embed-container--tiktok {
-  position: relative;
-  padding-bottom: 0;
-  height: auto;
-  overflow: hidden;
-}
-
-.post__embed-container--tiktok .tiktok-embed {
-  margin: 0 !important;
-  transform: scale(0.55);
-  transform-origin: top left;
-  max-width: 180%; /* compensate for 0.55 scale */
-}
-
-.post__embed-container--tiktok iframe {
-  position: static !important;
+.post--embed:hover .post__embed-play {
+  background: rgba(0, 0, 0, 0.75);
 }
 
 /* Twitter/X embed styling */
