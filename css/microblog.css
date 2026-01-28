@@ -359,6 +359,38 @@ body:has(.microblog) {
   filter: none;
 }
 
+/* TikTok embed styling */
+.post__embed-container .tiktok-embed {
+  margin: 0 !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+.post__embed-container--tiktok {
+  padding-bottom: 177%; /* 9:16 portrait ratio */
+}
+
+/* Twitter/X embed styling */
+.post__embed-container--tweet {
+  padding-bottom: 0; /* Let tweet determine height */
+  position: static;
+}
+
+.post__embed-container--tweet .twitter-tweet {
+  margin: 0 !important;
+}
+
+/* Instagram embed styling */
+.post__embed-container--instagram {
+  padding-bottom: 0; /* Let instagram determine height */
+  position: static;
+}
+
+.post__embed-container--instagram .instagram-media {
+  margin: 0 !important;
+  min-width: 100% !important;
+}
+
 .post__embed-caption {
   padding: 1rem 1.25rem;
   margin: 0;

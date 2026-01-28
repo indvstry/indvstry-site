@@ -15,6 +15,55 @@ function extractDomain(url) {
   }
 }
 
+// Detect video/social platform and return embed code
+function getVideoEmbed(url) {
+  if (!url) return null;
+
+  // YouTube detection
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  if (ytMatch) {
+    return {
+      platform: 'youtube',
+      containerClass: 'post__embed-container',
+      embed: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytMatch[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
+    };
+  }
+
+  // TikTok detection
+  const ttMatch = url.match(/tiktok\.com\/@([^/]+)\/video\/(\d+)/);
+  if (ttMatch) {
+    const username = ttMatch[1];
+    const videoId = ttMatch[2];
+    return {
+      platform: 'tiktok',
+      containerClass: 'post__embed-container post__embed-container--tiktok',
+      embed: `<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@${username}/video/${videoId}" data-video-id="${videoId}" style="max-width:605px;min-width:325px;"><section></section></blockquote>`
+    };
+  }
+
+  // X/Twitter detection
+  const xMatch = url.match(/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
+  if (xMatch) {
+    return {
+      platform: 'twitter',
+      containerClass: 'post__embed-container post__embed-container--tweet',
+      embed: `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`
+    };
+  }
+
+  // Instagram detection
+  const igMatch = url.match(/instagram\.com\/(?:p|reel)\/([A-Za-z0-9_-]+)/);
+  if (igMatch) {
+    return {
+      platform: 'instagram',
+      containerClass: 'post__embed-container post__embed-container--instagram',
+      embed: `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"><a href="${url}"></a></blockquote>`
+    };
+  }
+
+  return null;
+}
+
 // Parse all tidbits from HTML
 function parseTidbits() {
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
@@ -97,6 +146,30 @@ function generateArticleHtml(data, existingId = null) {
   let contentHtml = '';
 
   if (type === 'link') {
+    // Check if URL is embeddable (YouTube, TikTok, X, Instagram)
+    const videoEmbed = getVideoEmbed(url);
+
+    if (videoEmbed) {
+      // Auto-convert to embed post
+      contentHtml = `
+          ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
+          <div class="${videoEmbed.containerClass}">
+            ${videoEmbed.embed}
+          </div>${description ? `
+          <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
+
+      // Return embed-style article
+      return `
+      <article class="post post--embed" id="${postId}">
+        <div class="post__content">${contentHtml}
+        </div>
+        <footer class="post__meta">
+          <time datetime="${date}">${date}</time>
+        </footer>
+      </article>`;
+    }
+
+    // Regular link post
     const domain = extractDomain(url);
     contentHtml = `
           <a href="${url}" class="post__link-card">
@@ -105,10 +178,26 @@ function generateArticleHtml(data, existingId = null) {
           <p class="post__link-commentary">${escapeHtml(description)}</p>` : ''}
           <span class="post__link-domain">${domain}</span>`;
   } else if (type === 'embed') {
+    // Check if URL provided, auto-generate embed code
+    let embedCode = body;
+    let containerClass = 'post__embed-container';
+
+    if (url && !body) {
+      const videoEmbed = getVideoEmbed(url);
+      if (videoEmbed) {
+        embedCode = videoEmbed.embed;
+        if (videoEmbed.platform === 'tiktok') {
+          containerClass = 'post__embed-container post__embed-container--tiktok';
+        }
+      }
+    } else if (body && body.includes('tiktok-embed')) {
+      containerClass = 'post__embed-container post__embed-container--tiktok';
+    }
+
     contentHtml = `
           ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
-          <div class="post__embed-container">
-            ${body}
+          <div class="${containerClass}">
+            ${embedCode}
           </div>${description ? `
           <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}`;
   } else if (type === 'text') {
@@ -191,8 +280,7 @@ function updateTidbit(postId, articleHtml) {
 
   // Find and replace the existing article
   const articleRegex = new RegExp(
-    `<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`,
-    'g'
+    `<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`
   );
 
   if (articleRegex.test(html)) {
@@ -208,8 +296,7 @@ function deleteTidbit(postId) {
   let html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
 
   const articleRegex = new RegExp(
-    `\\s*<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`,
-    'g'
+    `\\s*<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`
   );
 
   if (articleRegex.test(html)) {
@@ -522,7 +609,41 @@ function serveForm(res) {
       titleGroup.classList.toggle('hidden', type === 'text');
       bodyGroup.classList.toggle('hidden', type === 'link');
       descGroup.classList.toggle('hidden', type === 'text' || type === 'quote');
+
+      // Update URL label for embed type
+      const urlLabel = urlGroup.querySelector('label');
+      if (type === 'embed') {
+        urlLabel.textContent = 'Video URL (YouTube/TikTok)';
+        document.getElementById('url').placeholder = 'Paste YouTube or TikTok URL - embed code auto-generates';
+      } else {
+        urlLabel.textContent = 'URL';
+        document.getElementById('url').placeholder = 'https://example.com/article';
+      }
     }
+
+    // Auto-detect video URL and generate embed
+    document.getElementById('url').addEventListener('input', async (e) => {
+      if (typeSelect.value !== 'embed') return;
+      const url = e.target.value;
+      if (!url) return;
+
+      // Check for YouTube
+      const ytMatch = url.match(/(?:youtube\\.com\\/watch\\?v=|youtu\\.be\\/|youtube\\.com\\/embed\\/)([a-zA-Z0-9_-]{11})/);
+      if (ytMatch) {
+        document.getElementById('body').value = \`<iframe width="560" height="315" src="https://www.youtube.com/embed/\${ytMatch[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>\`;
+        updatePreview();
+        return;
+      }
+
+      // Check for TikTok
+      const ttMatch = url.match(/tiktok\\.com\\/@([^/]+)\\/video\\/(\\d+)/);
+      if (ttMatch) {
+        const username = ttMatch[1];
+        const videoId = ttMatch[2];
+        document.getElementById('body').value = \`<blockquote class="tiktok-embed" cite="https://www.tiktok.com/@\${username}/video/\${videoId}" data-video-id="\${videoId}" style="max-width:605px;min-width:325px;"><section></section></blockquote>\`;
+        updatePreview();
+      }
+    });
 
     typeSelect.addEventListener('change', updateFieldVisibility);
     updateFieldVisibility();
