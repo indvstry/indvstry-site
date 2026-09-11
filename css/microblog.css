@@ -94,6 +94,7 @@ body:has(.microblog) {
   border: 1px solid var(--card-border);
   display: flex;
   flex-direction: column;
+  max-height: 320px;
 }
 
 .post:hover {
@@ -359,31 +360,10 @@ body:has(.microblog) {
   filter: none;
 }
 
-/* Overlay approach for social embeds (tweet/instagram) - filters break their scripts */
+/* Social embeds - disable grayscale filter as it breaks their scripts */
 .post__embed-container--tweet,
 .post__embed-container--instagram {
   filter: none !important;
-  position: relative;
-}
-
-.post__embed-container--tweet::before,
-.post__embed-container--instagram::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--page-background);
-  opacity: 0.7;
-  pointer-events: none;
-  z-index: 10;
-  transition: opacity 0.3s ease;
-}
-
-.post--embed:hover .post__embed-container--tweet::before,
-.post--embed:hover .post__embed-container--instagram::before {
-  opacity: 0;
 }
 
 /* Video thumbnail preview card */
@@ -476,6 +456,97 @@ body:has(.microblog) {
 
 .post__embed-source::before {
   content: '↗ ';
+}
+
+/* Raw Twitter embed styling (without widgets.js) */
+.twitter-tweet {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border: none;
+  font-size: 0.75rem; /* small base for credit line */
+  color: var(--text-muted);
+}
+
+.twitter-tweet p {
+  font-size: 0.95rem; /* normal size for tweet content */
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+}
+
+.twitter-tweet a {
+  color: var(--text-muted);
+}
+
+/* Expandable cards - override base max-height and overflow */
+.post--tweet,
+.post--expandable {
+  max-height: none;
+  overflow: visible;
+  min-height: 240px;
+}
+
+.post--tweet > .post__meta,
+.post--expandable > .post__meta {
+  margin-top: auto; /* push footer to bottom */
+}
+
+/* Expandable tweet card */
+.post--tweet {
+  padding-bottom: 0;
+}
+
+.post--tweet .post__tweet-details summary {
+  display: block;
+}
+
+.post--tweet > .post__embed-caption {
+  padding: 1rem 1.25rem 0.5rem;
+  margin: 0;
+}
+
+.post--tweet > .post__embed-source {
+  padding: 0.25rem 1.25rem;
+}
+
+.post__tweet-details {
+  padding: 0;
+}
+
+.post__tweet-details summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.post__tweet-details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Truncate tweet when collapsed */
+.post__tweet-details:not([open]) .twitter-tweet p {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Show more/less indicator */
+.post__tweet-expand {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0.5rem 1.25rem;
+  opacity: 0.7;
+  position: relative;
+  z-index: 1;
+}
+
+.post__tweet-details:not([open]) .post__tweet-expand::after {
+  content: ' ↓';
+}
+
+.post__tweet-details[open] .post__tweet-expand::after {
+  content: ' ↑';
 }
 
 /* ================================
@@ -596,6 +667,162 @@ body:has(.microblog) {
 .post__tag::before {
   content: "#";
   opacity: 0.5;
+}
+
+/* ================================
+   EXPANDABLE POST (details/summary)
+   No JS required - native HTML5
+   ================================ */
+
+.post--expandable {
+  background: var(--card-bg);
+}
+
+
+.post__details {
+  width: 100%;
+}
+
+.post__summary {
+  display: block;
+  padding: 1.25rem;
+  cursor: pointer;
+  list-style: none; /* Remove default marker */
+}
+
+.post__summary::-webkit-details-marker {
+  display: none; /* Remove marker in Safari/Chrome */
+}
+
+.post__summary-title {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.post__summary-meta {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.post__summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.post__summary-domain {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+
+.post__summary-domain::before {
+  content: '↗ ';
+}
+
+.post__summary-toggle {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+}
+
+/* Default toggle text */
+.post__summary-toggle::before {
+  content: '▸ Show';
+}
+
+details[open] .post__summary-toggle::before {
+  content: '▾ Hide';
+}
+
+/* Video content: Watch / Hide */
+.post--video .post__summary-toggle::before {
+  content: '▸ Watch';
+}
+
+.post--video details[open] .post__summary-toggle::before {
+  content: '▾ Hide';
+}
+
+/* Text content: Read more / Less */
+.post--readmore .post__summary-toggle::before {
+  content: '▸ Read more';
+}
+
+.post--readmore details[open] .post__summary-toggle::before {
+  content: '▾ Less';
+}
+
+/* Tweet content: View / Hide */
+.post--tweet .post__summary-toggle::before {
+  content: '▸ View';
+}
+
+.post--tweet details[open] .post__summary-toggle::before {
+  content: '▾ Hide';
+}
+
+/* Static tweet styling */
+.post__static-tweet {
+  margin: 0;
+  padding: 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  border: none;
+  background: transparent;
+}
+
+.post__static-tweet p {
+  margin: 0 0 1rem 0;
+  white-space: pre-line;
+}
+
+.post__static-tweet footer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+.post__static-tweet footer a {
+  color: var(--text-muted);
+}
+
+.post__static-tweet footer a:hover {
+  color: var(--text-color);
+}
+
+.post__expand-content {
+  border-top: 1px solid var(--card-border);
+}
+
+.post--expandable .post__embed-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  background: var(--pattern-bg);
+}
+
+.post--expandable .post__embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 
 /* ================================
