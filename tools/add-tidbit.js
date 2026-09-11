@@ -18,8 +18,21 @@ function extractDomain(url) {
   }
 }
 
+// The preview re-renders as you type; without this every keystroke would be
+// another round trip to a rate-limited third-party API.
+const oembedCache = new Map();
+
 // Fetch oEmbed data from a platform
 function fetchOEmbed(url, platform) {
+  const key = `${platform}|${url}`;
+  if (oembedCache.has(key)) return Promise.resolve(oembedCache.get(key));
+  return fetchOEmbedUncached(url, platform).then((data) => {
+    oembedCache.set(key, data);
+    return data;
+  });
+}
+
+function fetchOEmbedUncached(url, platform) {
   return new Promise((resolve, reject) => {
     let oembedUrl;
     if (platform === 'tiktok') {
@@ -239,7 +252,7 @@ function generatePostId(dateStr, html) {
 }
 
 // Generate article HTML based on type
-async function generateArticleHtml(data, existingId = null) {
+async function generateArticleHtml(data, existingId = null, dryRun = false) {
   const { type, url, title, description, body, date } = data;
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
   const postId = existingId || generatePostId(date, html);
@@ -260,9 +273,13 @@ async function generateArticleHtml(data, existingId = null) {
           const thumbPath = path.join(PREVIEWS_DIR, thumbFilename);
           const thumbUrl = `images/previews/${thumbFilename}`;
 
-          console.log('Downloading thumbnail...');
-          await downloadImage(oembed.thumbnail_url, thumbPath);
-          console.log('Thumbnail saved to', thumbPath);
+          // A preview must not litter images/previews/ — it still renders the
+          // local path the real save would write, just without creating it.
+          if (!dryRun) {
+            console.log('Downloading thumbnail...');
+            await downloadImage(oembed.thumbnail_url, thumbPath);
+            console.log('Thumbnail saved to', thumbPath);
+          }
 
           contentHtml = `
           ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
@@ -399,6 +416,15 @@ async function generateArticleHtml(data, existingId = null) {
           <time datetime="${date}">${date}</time>
         </footer>
       </article>`;
+}
+
+// Strip the file's base indentation so a preview reads flush-left without
+// distorting the relative structure of what will actually be written.
+function dedent(text) {
+  const lines = text.replace(/^\n+|\s+$/g, '').split('\n');
+  const indents = lines.filter(l => l.trim()).map(l => l.match(/^ */)[0].length);
+  const base = Math.min(...indents);
+  return lines.map(l => l.slice(base)).join('\n');
 }
 
 // Escape HTML entities
@@ -813,43 +839,43 @@ function serveForm(res) {
     typeSelect.addEventListener('change', updateFieldVisibility);
     updateFieldVisibility();
 
-    function updatePreview() {
-      const data = new FormData(form);
-      const type = data.get('type');
-      const url = data.get('url');
-      const title = data.get('title');
-      const desc = data.get('description');
-      const body = data.get('body');
-      const date = data.get('date');
+    let previewTimer = null;
+    let previewSeq = 0;
 
-      let preview = '';
-      if (type === 'link' && url && title) {
-        preview = '<article class="post post--link">\\n';
-        preview += '  <a href="' + url + '">\\n';
-        preview += '    ' + title + '\\n';
-        preview += '  </a>\\n';
-        if (desc) preview += '  <p>' + desc + '</p>\\n';
-        preview += '  <time>' + date + '</time>\\n';
-        preview += '</article>';
-      } else if (type === 'embed' && body) {
-        preview = '<article class="post post--embed">\\n';
-        if (title) preview += '  <p>' + title + '</p>\\n';
-        preview += '  ' + body.substring(0, 50) + '...\\n';
-        preview += '  <time>' + date + '</time>\\n';
-        preview += '</article>';
-      } else if (type === 'text' && body) {
-        preview = '<article class="post post--text">\\n';
-        preview += '  <p>' + body + '</p>\\n';
-        preview += '  <time>' + date + '</time>\\n';
-        preview += '</article>';
-      } else if (type === 'quote' && body) {
-        preview = '<article class="post post--quote">\\n';
-        preview += '  <blockquote>' + body + '</blockquote>\\n';
-        if (title) preview += '  <cite>' + title + '</cite>\\n';
-        preview += '  <time>' + date + '</time>\\n';
-        preview += '</article>';
+    function updatePreview() {
+      const payload = Object.fromEntries(new FormData(form));
+      const ready = payload.type === 'link'
+        ? Boolean(payload.url && payload.title)
+        : Boolean(payload.body);
+
+      if (!ready) {
+        clearTimeout(previewTimer);
+        previewSeq++;
+        previewContent.textContent = '(fill in fields to see preview)';
+        return;
       }
-      previewContent.textContent = preview || '(fill in fields to see preview)';
+
+      // Ask the server to render it, so the preview is the real generator
+      // output — auto-embeds included — rather than a guess that drifts.
+      clearTimeout(previewTimer);
+      previewTimer = setTimeout(async () => {
+        const seq = ++previewSeq;
+        try {
+          const res = await fetch('/preview', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+          if (seq !== previewSeq) return; // superseded by a newer keystroke
+          previewContent.textContent = result.success
+            ? result.html
+            : 'Preview unavailable: ' + result.error;
+        } catch (err) {
+          if (seq !== previewSeq) return;
+          previewContent.textContent = 'Preview unavailable: ' + err.message;
+        }
+      }, 400);
     }
 
     form.addEventListener('input', updatePreview);
@@ -896,6 +922,22 @@ const server = http.createServer((req, res) => {
     const tidbits = parseTidbits();
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify(tidbits));
+  } else if (req.method === 'POST' && req.url === '/preview') {
+    // Same generator as /add and /update, side effects suppressed — so the
+    // preview cannot drift from what actually gets written.
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', async () => {
+      try {
+        const data = JSON.parse(body);
+        const articleHtml = await generateArticleHtml(data, data.editId || null, true);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, html: dedent(articleHtml) }));
+      } catch (err) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
   } else if (req.method === 'POST' && req.url === '/add') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
