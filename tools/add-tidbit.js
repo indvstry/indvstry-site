@@ -18,18 +18,40 @@ function extractDomain(url) {
   }
 }
 
-// Fetch oEmbed data from TikTok
-function fetchOEmbed(url) {
+// Fetch oEmbed data from a platform
+function fetchOEmbed(url, platform) {
   return new Promise((resolve, reject) => {
-    const oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
-    https.get(oembedUrl, (res) => {
-      let data = '';
-      res.on('data', chunk => { data += chunk; });
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch (e) { reject(e); }
-      });
-    }).on('error', reject);
+    let oembedUrl;
+    if (platform === 'tiktok') {
+      oembedUrl = `https://www.tiktok.com/oembed?url=${encodeURIComponent(url)}`;
+    } else if (platform === 'twitter') {
+      // publish.twitter.com now 301s to publish.x.com
+      oembedUrl = `https://publish.x.com/oembed?url=${encodeURIComponent(url)}&omit_script=true`;
+    } else {
+      return reject(new Error('Unsupported platform for oEmbed'));
+    }
+    // https.get does not follow redirects, and a redirect body is not JSON —
+    // without this the parse throws and the caller silently degrades the post.
+    const get = (target, hops = 0) => {
+      if (hops > 3) return reject(new Error('Too many redirects'));
+      https.get(target, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          res.resume();
+          return get(new URL(res.headers.location, target).href, hops + 1);
+        }
+        if (res.statusCode !== 200) {
+          res.resume();
+          return reject(new Error(`oEmbed returned HTTP ${res.statusCode}`));
+        }
+        let data = '';
+        res.on('data', chunk => { data += chunk; });
+        res.on('end', () => {
+          try { resolve(JSON.parse(data)); }
+          catch (e) { reject(e); }
+        });
+      }).on('error', reject);
+    };
+    get(oembedUrl);
   });
 }
 
@@ -77,13 +99,13 @@ function getVideoEmbed(url) {
     };
   }
 
-  // X/Twitter detection
+  // X/Twitter detection - use oEmbed for full tweet content
   const xMatch = url.match(/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
   if (xMatch) {
     return {
       platform: 'twitter',
-      containerClass: 'post__embed-container post__embed-container--tweet',
-      embed: `<blockquote class="twitter-tweet"><a href="${url}"></a></blockquote>`
+      async: true,
+      containerClass: 'post__embed-container post__embed-container--tweet'
     };
   }
 
@@ -100,25 +122,66 @@ function getVideoEmbed(url) {
   return null;
 }
 
+// Matches any modifier combination, e.g. "post--link" or "post--embed post--tweet".
+// Anything narrower misses the variants the Twitter/TikTok paths emit.
+const POST_CLASS_RE = 'post--[a-z-]+(?:\\s+post--[a-z-]+)*';
+
 // Parse all tidbits from HTML
 function parseTidbits() {
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
   const tidbits = [];
 
   // Match all article elements
-  const articleRegex = /<article class="post post--(link|quote|text|embed)" id="(post-\d{8}-\d+)">([\s\S]*?)<\/article>/g;
+  const articleRegex = new RegExp(
+    `<article class="post (${POST_CLASS_RE})" id="(post-\\d{8}-\\d+)">([\\s\\S]*?)<\\/article>`,
+    'g'
+  );
   let match;
 
   while ((match = articleRegex.exec(html)) !== null) {
-    const type = match[1];
+    const classes = match[1];
     const id = match[2];
     const content = match[3];
 
-    const tidbit = { id, type };
+    // Hand-authored shapes have no generator counterpart, so an edit would
+    // rewrite them into something else entirely. Keep them out of the editor.
+    if (/\bpost--expandable\b/.test(classes)) continue;
 
-    // Extract date
     const dateMatch = content.match(/<time datetime="([^"]+)">/);
-    if (dateMatch) tidbit.date = dateMatch[1];
+    const date = dateMatch ? dateMatch[1] : undefined;
+
+    // Tweet and TikTok posts are both produced by the "link" path from a source
+    // URL, so round-trip them as links — saving then regenerates the same markup
+    // instead of collapsing them into a bare embed container.
+    const tweetUrl = /\bpost--tweet\b/.test(classes)
+      ? content.match(/https:\/\/(?:twitter\.com|x\.com)\/\w+\/status\/\d+/)?.[0]
+      : null;
+    const previewUrl = content.match(
+      /<a href="([^"]+)"[^>]*class="post__embed-preview">/
+    )?.[1];
+    const sourceUrl = tweetUrl || previewUrl;
+
+    if (sourceUrl) {
+      const captions = [
+        ...content.matchAll(/<p class="post__embed-caption">([^<]+)<\/p>/g)
+      ];
+      tidbits.push({
+        id,
+        type: 'link',
+        date,
+        url: sourceUrl,
+        title: captions[0] ? decodeHtml(captions[0][1]) : undefined,
+        description: captions[1] ? decodeHtml(captions[1][1]) : undefined
+      });
+      continue;
+    }
+
+    const baseType = classes.match(/^post--(link|quote|text|embed)\b/);
+    if (!baseType) continue;
+    const type = baseType[1];
+
+    const tidbit = { id, type };
+    if (date) tidbit.date = date;
 
     // Extract based on type
     if (type === 'link') {
@@ -140,9 +203,11 @@ function parseTidbits() {
       if (bodyMatch) tidbit.body = decodeHtml(bodyMatch[1]);
     } else if (type === 'embed') {
       const titleMatch = content.match(/<p class="post__embed-caption">([^<]+)<\/p>/);
-      const embedMatch = content.match(/<div class="post__embed-container">([\s\S]*?)<\/div>/);
+      const embedMatch = content.match(/<div class="post__embed-container[^"]*">([\s\S]*?)<\/div>/);
+      // No recoverable embed code means a save would emit an empty container.
+      if (!embedMatch) continue;
       if (titleMatch) tidbit.title = decodeHtml(titleMatch[1]);
-      if (embedMatch) tidbit.body = embedMatch[1].trim();
+      tidbit.body = embedMatch[1].trim();
     }
 
     tidbits.push(tidbit);
@@ -190,7 +255,7 @@ async function generateArticleHtml(data, existingId = null) {
       if (videoEmbed.platform === 'tiktok') {
         try {
           console.log('Fetching TikTok oEmbed data...');
-          const oembed = await fetchOEmbed(url);
+          const oembed = await fetchOEmbed(url, 'tiktok');
           const thumbFilename = `tiktok-${videoEmbed.videoId}.jpg`;
           const thumbPath = path.join(PREVIEWS_DIR, thumbFilename);
           const thumbUrl = `images/previews/${thumbFilename}`;
@@ -218,6 +283,32 @@ async function generateArticleHtml(data, existingId = null) {
       </article>`;
         } catch (err) {
           console.error('TikTok oEmbed failed, falling back to link:', err.message);
+        }
+      }
+
+      // Twitter/X: fetch full embed HTML via oEmbed, wrap in expandable details
+      if (videoEmbed.platform === 'twitter') {
+        try {
+          console.log('Fetching Twitter oEmbed data...');
+          const oembed = await fetchOEmbed(url, 'twitter');
+
+          return `
+      <article class="post post--embed post--tweet" id="${postId}">
+        ${title ? `<p class="post__embed-caption">${escapeHtml(title)}</p>` : ''}
+        <details class="post__tweet-details">
+          <summary>
+            ${oembed.html.trim()}
+            <span class="post__tweet-expand">Show more</span>
+          </summary>
+        </details>
+        <span class="post__embed-source">x.com</span>${description ? `
+        <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}
+        <footer class="post__meta">
+          <time datetime="${date}">${date}</time>
+        </footer>
+      </article>`;
+        } catch (err) {
+          console.error('Twitter oEmbed failed, falling back to link:', err.message);
         }
       }
 
@@ -354,7 +445,7 @@ function updateTidbit(postId, articleHtml) {
 
   // Find and replace the existing article
   const articleRegex = new RegExp(
-    `<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`
+    `<article class="post ${POST_CLASS_RE}" id="${postId}">[\\s\\S]*?<\\/article>`
   );
 
   if (articleRegex.test(html)) {
@@ -370,7 +461,7 @@ function deleteTidbit(postId) {
   let html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
 
   const articleRegex = new RegExp(
-    `\\s*<article class="post post--(?:link|quote|text|embed)" id="${postId}">[\\s\\S]*?<\\/article>`
+    `\\s*<article class="post ${POST_CLASS_RE}" id="${postId}">[\\s\\S]*?<\\/article>`
   );
 
   if (articleRegex.test(html)) {
