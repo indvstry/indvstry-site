@@ -490,6 +490,7 @@ body:has(.microblog) {
    cap, and overflow:hidden silently eats whatever does not fit. */
 .post--tweet,
 .post--embed,
+.post--quote,
 .post--expandable {
   max-height: none;
   overflow: visible;
@@ -722,6 +723,26 @@ body:has(.microblog) {
   color: var(--text-muted);
   line-height: 1.5;
   margin-bottom: 0.5rem;
+}
+
+.post__summary-poster {
+  display: block;
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  object-position: top;
+  margin: 0.75rem 0;
+  filter: grayscale(1);
+  transition: filter 0.3s ease;
+}
+
+.post--expandable:hover .post__summary-poster {
+  filter: none;
+}
+
+/* Once the player is open the poster is redundant. */
+details[open] .post__summary-poster {
+  display: none;
 }
 
 .post__summary-row {

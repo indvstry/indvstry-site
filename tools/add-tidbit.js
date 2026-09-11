@@ -2,6 +2,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const { execFile } = require('child_process');
 
 const PREVIEWS_DIR = path.join(__dirname, '..', 'images', 'previews');
 
@@ -95,6 +96,8 @@ function getVideoEmbed(url) {
   if (ytMatch) {
     return {
       platform: 'youtube',
+      videoId: ytMatch[1],
+      async: true,
       containerClass: 'post__embed-container',
       embed: `<iframe width="560" height="315" src="https://www.youtube.com/embed/${ytMatch[1]}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`
     };
@@ -128,6 +131,8 @@ function getVideoEmbed(url) {
   if (igMatch) {
     return {
       platform: 'instagram',
+      videoId: igMatch[1],
+      async: true,
       containerClass: 'post__embed-container post__embed-container--instagram',
       embed: `<blockquote class="instagram-media" data-instgrm-permalink="${url}" data-instgrm-version="14"><a href="${url}"></a></blockquote>`
     };
@@ -139,6 +144,55 @@ function getVideoEmbed(url) {
 // Matches any modifier combination, e.g. "post--link" or "post--embed post--tweet".
 // Anything narrower misses the variants the Twitter/TikTok paths emit.
 const POST_CLASS_RE = 'post--[a-z-]+(?:\\s+post--[a-z-]+)*';
+
+// Instagram's oEmbed needs a Facebook app token, and YouTube's gives no usable
+// poster, so yt-dlp is the only unauthenticated route to either. It is a system
+// binary rather than an npm dependency — if it is missing, the caller refuses
+// the post rather than writing one with no preserved media.
+function probeWithYtDlp(url) {
+  return new Promise((resolve, reject) => {
+    execFile('yt-dlp', ['--no-warnings', '-q', '--no-playlist',
+      '--print', '%(thumbnail)s\n%(title)s', url],
+      { timeout: 45000 }, (err, stdout) => {
+        if (err) {
+          return reject(new Error(
+            err.code === 'ENOENT'
+              ? 'yt-dlp is not installed (brew install yt-dlp)'
+              : err.message.split('\n')[0]
+          ));
+        }
+        const [thumbnail, title] = stdout.trim().split('\n');
+        if (!thumbnail || thumbnail === 'NA') return reject(new Error('no thumbnail available'));
+        resolve({ thumbnail, title: title && title !== 'NA' ? title : '' });
+      });
+  });
+}
+
+// Download a poster frame, naming it by platform and id, extension from the
+// response content-type rather than an assumed one.
+function savePoster(imageUrl, basename, dryRun) {
+  const EXT = { 'image/webp': 'webp', 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif' };
+  return new Promise((resolve, reject) => {
+    if (dryRun) return resolve(`images/previews/${basename}.jpg`);
+    const get = (target, hops = 0) => {
+      if (hops > 4) return reject(new Error('too many redirects'));
+      https.get(target, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          res.resume();
+          return get(new URL(res.headers.location, target).href, hops + 1);
+        }
+        if (res.statusCode !== 200) { res.resume(); return reject(new Error(`poster HTTP ${res.statusCode}`)); }
+        const ext = EXT[(res.headers['content-type'] || '').split(';')[0]] || 'jpg';
+        const filename = `${basename}.${ext}`;
+        const out = fs.createWriteStream(path.join(PREVIEWS_DIR, filename));
+        res.pipe(out);
+        out.on('finish', () => { out.close(); resolve(`images/previews/${filename}`); });
+        out.on('error', reject);
+      }).on('error', reject);
+    };
+    get(imageUrl);
+  });
+}
 
 // oEmbed returns a tweet's text but never its attached media. The public tweet
 // page exposes it as og:image, but that tag doubles as the author's avatar when
@@ -420,7 +474,82 @@ async function generateArticleHtml(data, existingId = null, dryRun = false) {
         }
       }
 
-      // YouTube, X, Instagram: use iframe/embed
+      // YouTube: store a poster locally and keep the player behind a <details>,
+      // matching the hand-authored post--expandable post--video shape. The
+      // iframe is no longer the only record of the post.
+      if (videoEmbed.platform === 'youtube') {
+        let poster, ytTitle = '';
+        try {
+          const probe = await probeWithYtDlp(url);
+          ytTitle = probe.title;
+          poster = await savePoster(probe.thumbnail, `youtube-${videoEmbed.videoId}`, dryRun);
+          if (!dryRun) console.log('YouTube poster saved to', poster);
+        } catch (err) {
+          throw new Error(
+            `YouTube fetch failed (${err.message}). Nothing was written: saving now ` +
+            `would store a bare iframe with no local poster, leaving the post blank ` +
+            `if the video is removed. Retry, or add it as a Quote to just link to it.`
+          );
+        }
+        const heading = escapeHtml(title || ytTitle);
+        return `
+      <article class="post post--expandable post--video" id="${postId}">
+        <details class="post__details">
+          <summary class="post__summary">
+            <span class="post__summary-title">${heading}</span>${description ? `
+            <span class="post__summary-meta">${escapeHtml(description)}</span>` : ''}
+            <img class="post__summary-poster" src="${poster}" alt="${heading}" loading="lazy">
+            <div class="post__summary-row">
+              <span class="post__summary-domain">youtube.com</span>
+              <span class="post__summary-toggle"></span>
+            </div>
+          </summary>
+          <div class="post__expand-content">
+            <div class="post__embed-container">
+              <iframe src="https://www.youtube.com/embed/${videoEmbed.videoId}" title="${heading}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+          </div>
+        </details>
+        <footer class="post__meta">
+          <time datetime="${date}">${date}</time>
+        </footer>
+      </article>`;
+      }
+
+      // Instagram: the old blockquote needed instagram.com/embed.js to render,
+      // so it stored nothing of the post. Static poster plus link out instead.
+      if (videoEmbed.platform === 'instagram') {
+        let poster, igTitle = '';
+        try {
+          const probe = await probeWithYtDlp(url);
+          igTitle = probe.title;
+          poster = await savePoster(probe.thumbnail, `instagram-${videoEmbed.videoId}`, dryRun);
+          if (!dryRun) console.log('Instagram poster saved to', poster);
+        } catch (err) {
+          throw new Error(
+            `Instagram fetch failed (${err.message}). Nothing was written: saving now ` +
+            `would store an empty blockquote that renders as blank space. Retry, or ` +
+            `add it as a Quote to just link to it.`
+          );
+        }
+        const caption = escapeHtml(title || igTitle);
+        return `
+      <article class="post post--embed" id="${postId}">
+        <div class="post__content">${caption ? `
+          <p class="post__embed-caption">${caption}</p>` : ''}
+          <a href="${url}" target="_blank" rel="noopener" class="post__embed-preview">
+            <img src="${poster}" alt="${caption || 'Instagram post'}" loading="lazy">
+          </a>
+          <span class="post__embed-source">instagram.com</span>${description ? `
+          <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}
+        </div>
+        <footer class="post__meta">
+          <time datetime="${date}">${date}</time>
+        </footer>
+      </article>`;
+      }
+
+      // Anything else with a ready-made embed
       if (videoEmbed.embed) {
         const domain = extractDomain(url);
         contentHtml = `
