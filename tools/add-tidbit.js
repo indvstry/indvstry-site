@@ -375,7 +375,14 @@ async function generateArticleHtml(data, existingId = null, dryRun = false) {
         </footer>
       </article>`;
         } catch (err) {
-          console.error('TikTok oEmbed failed, falling back to link:', err.message);
+          // Falling back to a bare link card would write a post that preserves
+          // none of the video — a pointer to someone else's infrastructure,
+          // which is the thing the static path exists to avoid. Refuse instead.
+          throw new Error(
+            `TikTok fetch failed (${err.message}). Nothing was written: saving now ` +
+            `would store a bare link with no thumbnail and no preserved content. ` +
+            `Retry, or add it as a Quote if you only want to link to it.`
+          );
         }
       }
 
@@ -405,7 +412,11 @@ async function generateArticleHtml(data, existingId = null, dryRun = false) {
         </footer>
       </article>`;
         } catch (err) {
-          console.error('Twitter oEmbed failed, falling back to link:', err.message);
+          throw new Error(
+            `X/Twitter fetch failed (${err.message}). Nothing was written: saving now ` +
+            `would store a bare link with none of the tweet's text preserved. ` +
+            `Retry, or add it as a Quote if you only want to link to it.`
+          );
         }
       }
 
@@ -621,6 +632,9 @@ function serveForm(res) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tidbits Manager</title>
   <style>
+    #status { padding: 0.8rem 1rem; border-radius: 4px; margin: 1rem 0; line-height: 1.5; }
+    #status.ok  { background: #e7f5ec; border: 1px solid #9ccfb0; color: #1c5233; }
+    #status.err { background: #fdecea; border: 1px solid #e0a9a3; color: #7a241c; }
     * { box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -788,6 +802,8 @@ function serveForm(res) {
     </div>
   </form>
 
+  <div id="status" class="hidden"></div>
+
   <div id="preview">
     <h3>Preview</h3>
     <pre id="preview-content"></pre>
@@ -888,7 +904,7 @@ function serveForm(res) {
 
     deleteBtn.addEventListener('click', async () => {
       const id = editIdInput.value;
-      if (!id) return alert('No tidbit selected');
+      if (!id) return setStatus('err', 'No tidbit selected');
       if (!confirm('Delete this tidbit permanently?')) return;
 
       const response = await fetch('/delete', {
@@ -898,13 +914,23 @@ function serveForm(res) {
       });
       const result = await response.json();
       if (result.success) {
-        alert('Tidbit deleted!');
+        setStatus('ok', 'Tidbit deleted.');
         await loadTidbits();
         resetForm();
       } else {
-        alert('Error: ' + result.error);
+        setStatus('err', result.error);
       }
     });
+
+    // Refusals carry an explanation worth reading, which a modal alert truncates
+    // and blocks the page on.
+    function setStatus(kind, message) {
+      const el = document.getElementById('status');
+      el.classList.remove('hidden', 'ok', 'err');
+      el.classList.add(kind);
+      el.textContent = message;
+      el.scrollIntoView({ block: 'nearest' });
+    }
 
     function updateFieldVisibility() {
       const type = typeSelect.value;
@@ -1007,11 +1033,11 @@ function serveForm(res) {
       });
       const result = await response.json();
       if (result.success) {
-        alert(isEdit ? 'Tidbit updated!' : 'Tidbit added!');
+        setStatus('ok', isEdit ? 'Tidbit updated.' : 'Tidbit added.');
         await loadTidbits();
         if (!isEdit) resetForm();
       } else {
-        alert('Error: ' + result.error);
+        setStatus('err', result.error);
       }
     });
 
