@@ -382,7 +382,9 @@ body:has(.microblog) {
      instead of letting the image dictate card height. */
   height: 190px;
   object-fit: cover;
-  object-position: center;
+  /* Tall screenshots and portrait video frames put their meaning at the top;
+     a centre crop lands on arbitrary mid-image content. */
+  object-position: top;
   filter: grayscale(1);
   transition: filter 0.3s ease;
 }

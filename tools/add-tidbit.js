@@ -117,6 +117,7 @@ function getVideoEmbed(url) {
   if (xMatch) {
     return {
       platform: 'twitter',
+      videoId: xMatch[1],
       async: true,
       containerClass: 'post__embed-container post__embed-container--tweet'
     };
@@ -138,6 +139,59 @@ function getVideoEmbed(url) {
 // Matches any modifier combination, e.g. "post--link" or "post--embed post--tweet".
 // Anything narrower misses the variants the Twitter/TikTok paths emit.
 const POST_CLASS_RE = 'post--[a-z-]+(?:\\s+post--[a-z-]+)*';
+
+// oEmbed returns a tweet's text but never its attached media. The public tweet
+// page exposes it as og:image, but that tag doubles as the author's avatar when
+// the tweet has no media, so the URL shape is what distinguishes them:
+//   pbs.twimg.com/media/... or jf.x.com/images/media-preview/...  -> real media
+//   pbs.twimg.com/profile_images/...                              -> avatar
+// X serves either form depending on the client, so accept both and reject only
+// the avatar.
+function fetchTweetPreview(tweetUrl, tweetId, dryRun) {
+  const EXT = { 'image/webp': 'webp', 'image/png': 'png', 'image/jpeg': 'jpg', 'image/gif': 'gif' };
+
+  const request = (target, hops, onOk, onFail) => {
+    if (hops > 3) return onFail();
+    https.get(target, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; tidbits)' } }, (res) => {
+      if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+        res.resume();
+        return request(new URL(res.headers.location, target).href, hops + 1, onOk, onFail);
+      }
+      if (res.statusCode !== 200) { res.resume(); return onFail(); }
+      onOk(res);
+    }).on('error', onFail);
+  };
+
+  return new Promise((resolve) => {
+    const fail = () => resolve(null);
+    request(tweetUrl, 0, (res) => {
+      let data = '';
+      res.on('data', c => { data += c; });
+      res.on('end', () => {
+        const og = data.match(/<meta[^>]+property="og:image"[^>]*content="([^"]+)"/)
+                || data.match(/<meta[^>]+content="([^"]+)"[^>]+property="og:image"/);
+        if (!og) return resolve(null);
+        const imageUrl = og[1].replace(/&amp;/g, '&');
+        const isMedia = /\/media\/|media-preview/.test(imageUrl) && !imageUrl.includes('profile_images');
+        if (!isMedia) return resolve(null);
+        if (dryRun) return resolve(`images/previews/tweet-${tweetId}.webp`);
+
+        request(imageUrl, 0, (imgRes) => {
+          const ext = EXT[(imgRes.headers['content-type'] || '').split(';')[0]] || 'jpg';
+          const filename = `tweet-${tweetId}.${ext}`;
+          const out = fs.createWriteStream(path.join(PREVIEWS_DIR, filename));
+          imgRes.pipe(out);
+          out.on('finish', () => {
+            out.close();
+            console.log('Tweet preview saved to', filename);
+            resolve(`images/previews/${filename}`);
+          });
+          out.on('error', fail);
+        }, fail);
+      });
+    }, fail);
+  });
+}
 
 // A pasted platform blockquote is an empty shell: it only renders if that
 // platform's script is on the page, and index.html deliberately loads none of
@@ -330,6 +384,7 @@ async function generateArticleHtml(data, existingId = null, dryRun = false) {
         try {
           console.log('Fetching Twitter oEmbed data...');
           const oembed = await fetchOEmbed(url, 'twitter');
+          const preview = await fetchTweetPreview(url, videoEmbed.videoId, dryRun);
 
           return `
       <article class="post post--embed post--tweet" id="${postId}">
@@ -339,7 +394,10 @@ async function generateArticleHtml(data, existingId = null, dryRun = false) {
             ${oembed.html.trim()}
             <span class="post__tweet-expand">Show more</span>
           </summary>
-        </details>
+        </details>${preview ? `
+        <a href="${url}" target="_blank" rel="noopener" class="post__embed-preview">
+          <img src="${preview}" alt="${escapeHtml(title || 'Tweet media')}" loading="lazy">
+        </a>` : ''}
         <span class="post__embed-source">x.com</span>${description ? `
         <p class="post__embed-caption">${escapeHtml(description)}</p>` : ''}
         <footer class="post__meta">
