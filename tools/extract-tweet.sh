@@ -41,7 +41,12 @@ TWEET_DATE=$(echo "$HTML" | grep -oE '[A-Z][a-z]+ [0-9]+, [0-9]+' | head -1)
 
 # Generate today's date for the post
 POST_DATE=$(date +%Y-%m-%d)
-POST_ID=$(date +%Y%m%d)-$(( RANDOM % 10 + 1 ))
+# Mirror generatePostId in add-tidbit.js: highest suffix for the day, plus one.
+# $RANDOM collided with existing ids.
+INDEX="$(dirname "$0")/../index.html"
+DATE_COMPACT=$(date +%Y%m%d)
+MAX=$(sed -n "s/.*id=\"post-${DATE_COMPACT}-\([0-9]\{1,\}\)\".*/\1/p" "$INDEX" 2>/dev/null | sort -n | tail -1)
+POST_ID="${DATE_COMPACT}-$(( ${MAX:-0} + 1 ))"
 
 # If no caption provided, use first line of tweet
 if [ -z "$CAPTION" ]; then

@@ -139,6 +139,19 @@ function getVideoEmbed(url) {
 // Anything narrower misses the variants the Twitter/TikTok paths emit.
 const POST_CLASS_RE = 'post--[a-z-]+(?:\\s+post--[a-z-]+)*';
 
+// A pasted platform blockquote is an empty shell: it only renders if that
+// platform's script is on the page, and index.html deliberately loads none of
+// them (see d439b1a, and the widgets.js removal). Recover the source URL so the
+// static path handles it instead of writing markup that renders as nothing.
+function urlFromPastedEmbed(body) {
+  if (!body) return null;
+  const tiktok = body.match(/tiktok-embed[^>]*cite="([^"]+)"/);
+  if (tiktok) return tiktok[1];
+  const tweet = body.match(/twitter-tweet[\s\S]*?href="(https:\/\/(?:twitter\.com|x\.com)\/\w+\/status\/\d+)[^"]*"/);
+  if (tweet) return tweet[1];
+  return null;
+}
+
 // Parse all tidbits from HTML
 function parseTidbits() {
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
@@ -253,7 +266,16 @@ function generatePostId(dateStr, html) {
 
 // Generate article HTML based on type
 async function generateArticleHtml(data, existingId = null, dryRun = false) {
-  const { type, url, title, description, body, date } = data;
+  let { type, url, title, description, body, date } = data;
+  if (type === 'embed') {
+    const recovered = urlFromPastedEmbed(body);
+    if (recovered) {
+      console.log('Pasted embed code detected, using static path for', recovered);
+      type = 'link';
+      url = recovered;
+      body = '';
+    }
+  }
   const html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
   const postId = existingId || generatePostId(date, html);
 
@@ -441,23 +463,55 @@ function escapeHtml(text) {
 function insertTidbit(articleHtml, date) {
   let html = fs.readFileSync(TIDBITS_PATH, 'utf-8');
   const year = date.substring(0, 4);
+  const article = articleHtml.trim();
 
   const yearSectionRegex = new RegExp(`<section class="posts-year" aria-labelledby="year-${year}">`);
 
   if (yearSectionRegex.test(html)) {
-    const insertPoint = new RegExp(`(<h2 id="year-${year}" class="posts-year__heading">${year}</h2>)`);
-    html = html.replace(insertPoint, `$1\n${articleHtml}`);
+    const sectionStart = html.search(yearSectionRegex);
+    const sectionEnd = html.indexOf('</section>', sectionStart);
+    const section = html.slice(sectionStart, sectionEnd);
+
+    // Posts run newest-first, so sit above the first post older than this one.
+    // Prepending unconditionally only looks right when every post is same-day
+    // or newer, which stops being true the moment one is back-dated.
+    const articleRe = new RegExp(
+      `<article class="post ${POST_CLASS_RE}" id="post-\\d{8}-\\d+">[\\s\\S]*?<\\/article>`,
+      'g'
+    );
+    let match, insertAt = null;
+    while ((match = articleRe.exec(section)) !== null) {
+      const when = match[0].match(/<time datetime="([^"]+)">/);
+      if (when && when[1] < date) {
+        insertAt = sectionStart + match.index;
+        break;
+      }
+    }
+
+    if (insertAt === null) {
+      // Older than everything already in the year — goes last.
+      const head = html.slice(0, sectionEnd).replace(/\s*$/, '');
+      html = head + '\n\n      ' + article + '\n    ' + html.slice(sectionEnd);
+    } else {
+      html = html.slice(0, insertAt) + article + '\n\n      ' + html.slice(insertAt);
+    }
   } else {
     const newSection = `
     <!-- ${year} -->
     <section class="posts-year" aria-labelledby="year-${year}">
       <h2 id="year-${year}" class="posts-year__heading">${year}</h2>
-${articleHtml}
+      ${article}
     </section>
 `;
-    const firstSectionRegex = /(\n    <!-- \d{4} -->)/;
-    if (firstSectionRegex.test(html)) {
-      html = html.replace(firstSectionRegex, newSection + '$1');
+    // Year sections are newest-first too; land above the first older year, or
+    // after the last section when this is the oldest year on the page.
+    const years = [...html.matchAll(/\n    <!-- (\d{4}) -->/g)];
+    const older = years.find(m => m[1] < year);
+    if (older) {
+      html = html.slice(0, older.index) + newSection.replace(/\n$/, '') + html.slice(older.index);
+    } else if (years.length) {
+      const lastEnd = html.lastIndexOf('</section>') + '</section>'.length;
+      html = html.slice(0, lastEnd) + '\n' + newSection.replace(/\n$/, '') + html.slice(lastEnd);
     }
   }
 

@@ -377,7 +377,12 @@ body:has(.microblog) {
 .post__embed-preview img {
   display: block;
   width: 100%;
-  height: auto;
+  /* Portrait thumbnails (TikTok is 3:4) at width:100% overflow the card's
+     320px cap, and overflow:hidden then eats the caption and date. Crop
+     instead of letting the image dictate card height. */
+  height: 190px;
+  object-fit: cover;
+  object-position: center;
   filter: grayscale(1);
   transition: filter 0.3s ease;
 }
@@ -479,7 +484,10 @@ body:has(.microblog) {
 }
 
 /* Expandable cards - override base max-height and overflow */
+/* post--embed joins them: a thumbnail plus caption plus date exceeds the 320px
+   cap, and overflow:hidden silently eats whatever does not fit. */
 .post--tweet,
+.post--embed,
 .post--expandable {
   max-height: none;
   overflow: visible;
