@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Archive any newly-linked video after a push, without holding the push up.
+#
+# Git has no post-push hook, so this runs at pre-push. A video can be hundreds
+# of megabytes, and blocking a push behind that download would make pushing feel
+# broken — so the work is detached and the hook returns immediately. The push
+# never fails because of archiving.
+#
+# Installed with:  git config core.hooksPath tools/hooks
+# Disabled with:   git config --unset core.hooksPath
+
+REPO="$(cd "$(dirname "$0")/../.." && pwd)"
+ARCHIVER="$REPO/tools/archive-videos.sh"
+LOG="${INDVSTRY_ARCHIVE:-$HOME/Library/CloudStorage/Dropbox/indvstry-archive}/archive.log"
+
+[ -x "$ARCHIVER" ] || exit 0
+command -v yt-dlp >/dev/null || exit 0
+
+# Cheap check first — reads index.html and the download tracker, no network.
+PENDING="$("$ARCHIVER" --pending 2>/dev/null)"
+[ -z "$PENDING" ] && exit 0
+
+COUNT=$(echo "$PENDING" | wc -l | tr -d ' ')
+echo "pre-push: $COUNT new video(s) to archive, running in the background"
+echo "          log: $LOG"
+
+mkdir -p "$(dirname "$LOG")"
+# nohup, not setsid — macOS has no setsid, and this needs to survive the
+# terminal going away mid-push.
+nohup "$ARCHIVER" >>"$LOG" 2>&1 </dev/null &
+disown 2>/dev/null
+
+exit 0

@@ -26,10 +26,12 @@ INDEX="$(cd "$(dirname "$0")/.." && pwd)/index.html"
 SEEN="$ARCHIVE_DIR/.downloaded"
 
 DRY_RUN=0
+PENDING_ONLY=0
 URLS=()
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
+    --pending) PENDING_ONLY=1 ;;
     -*) echo "unknown option: $arg" >&2; exit 1 ;;
     *) URLS+=("$arg") ;;
   esac
@@ -56,18 +58,43 @@ if [ ${#URLS[@]} -eq 0 ]; then
   exit 0
 fi
 
+# Narrow to what is actually missing. yt-dlp would skip the rest anyway, but the
+# push hook needs to know whether there is any work before it spawns anything.
+PENDING=()
+for u in "${URLS[@]}"; do
+  id=$(echo "$u" | sed -nE 's|.*/video/([0-9]+).*|\1|p; s|.*[?&]v=([A-Za-z0-9_-]{11}).*|\1|p; s|.*/(p\|reel)/([A-Za-z0-9_-]+).*|\2|p' | head -1)
+  if [ -n "$id" ] && [ -f "$SEEN" ] && grep -qF " $id" "$SEEN"; then
+    continue
+  fi
+  PENDING+=("$u")
+done
+
+if [ "$PENDING_ONLY" -eq 1 ]; then
+  [ ${#PENDING[@]} -gt 0 ] && printf '%s\n' "${PENDING[@]}"
+  exit 0
+fi
+
 echo "Archive: $ARCHIVE_DIR"
-echo "Found ${#URLS[@]} video(s)."
+echo "Found ${#URLS[@]} video(s) linked."
 
 if [ "$DRY_RUN" -eq 1 ]; then
-  printf '  %s\n' "${URLS[@]}"
+  if [ ${#PENDING[@]} -eq 0 ]; then
+    echo "  all already archived — nothing to do"
+  else
+    printf '  MISSING: %s\n' "${PENDING[@]}"
+  fi
   echo "(dry run — nothing downloaded)"
+  exit 0
+fi
+
+if [ ${#PENDING[@]} -eq 0 ]; then
+  echo "All already archived — nothing to do."
   exit 0
 fi
 
 mkdir -p "$ARCHIVE_DIR"
 
-for u in "${URLS[@]}"; do
+for u in "${PENDING[@]}"; do
   echo "--- $u"
   # Keep the metadata alongside the file: if the post ever needs rebuilding,
   # the description, thumbnail and upload date are all that is left.
