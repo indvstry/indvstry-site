@@ -19,7 +19,7 @@
 
 set -euo pipefail
 
-ARCHIVE_DIR="${INDVSTRY_ARCHIVE:-$HOME/Library/CloudStorage/Dropbox/indvstry-archive}"
+ARCHIVE_DIR="${INDVSTRY_ARCHIVE:-$HOME/Library/CloudStorage/Dropbox/indvstry-site-archive}"
 INDEX="$(cd "$(dirname "$0")/.." && pwd)/index.html"
 # yt-dlp records what it has already fetched here, so re-running is cheap and
 # idempotent rather than re-downloading everything.
@@ -32,6 +32,7 @@ for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY_RUN=1 ;;
     --pending) PENDING_ONLY=1 ;;
+    --archive-dir) echo "$ARCHIVE_DIR"; exit 0 ;;
     -*) echo "unknown option: $arg" >&2; exit 1 ;;
     *) URLS+=("$arg") ;;
   esac

@@ -12,10 +12,13 @@
 
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 ARCHIVER="$REPO/tools/archive-videos.sh"
-LOG="${INDVSTRY_ARCHIVE:-$HOME/Library/CloudStorage/Dropbox/indvstry-archive}/archive.log"
+# Ask the archiver where it writes rather than repeating its default here —
+# the two drifted apart the first time the folder was renamed.
+LOG=""
 
 [ -x "$ARCHIVER" ] || exit 0
 command -v yt-dlp >/dev/null || exit 0
+LOG="$("$ARCHIVER" --archive-dir)/archive.log"
 
 # Cheap check first — reads index.html and the download tracker, no network.
 PENDING="$("$ARCHIVER" --pending 2>/dev/null)"
