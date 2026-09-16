@@ -6,8 +6,9 @@
     document.documentElement.dataset.theme = saved;
   }
 
-  // '' is the default light theme, 'blue' is dark, 'glitch' is the
-  // experiment in css/glitch.css. Each has its own button in the nav.
+  // '' is the default light theme, 'blue' is dark; 'glitch' and 'crt' are
+  // the experiments in css/glitch.css and css/crt.css. Each has its own
+  // button in the nav.
   window.setTheme = function(name) {
     document.documentElement.dataset.theme = name;
     localStorage.setItem('theme', name);

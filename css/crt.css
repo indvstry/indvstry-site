@@ -1,0 +1,217 @@
+/* ================================
+   CRT THEME (experimental)
+   Fourth stop on the theme toggle: a monochrome phosphor terminal.
+   Where glitch.css is datamosh/VHS (colour channels splitting, cards
+   tearing), this is one tube with one phosphor: no colour but green,
+   bloom around the glyphs, scanlines across the whole screen, a slow
+   refresh bar, a vignette for the curved glass and a flicker.
+   Everything is CSS; js/theme.js only sets data-theme="crt".
+   Isolated in its own file so it can be ripped out in one go.
+   ================================ */
+
+[data-theme="crt"] {
+  /* P1 phosphor is ~hue 120-130. Set 40 for an amber P3 tube. */
+  --hue: 125;
+
+  --color-100: hsl(var(--hue), 100%, 90%);
+  --color-200: hsl(var(--hue), 100%, 68%);
+  --color-300: hsl(var(--hue), 95%, 56%);
+  --color-400: hsl(var(--hue), 55%, 40%);
+  --color-500: hsl(var(--hue), 45%, 30%);
+  --color-600: hsl(var(--hue), 40%, 22%);
+  --color-700: hsl(var(--hue), 35%, 12%);
+  --color-800: hsl(var(--hue), 30%, 7%);
+  --color-900: hsl(var(--hue), 35%, 4%);
+
+  /* Same semantic mapping as the blue theme in style.css */
+  --page-background: var(--color-900);
+  --text-color: var(--color-200);
+  --text-muted: var(--color-400);
+  --heading-color: var(--color-300);
+  --highlight-color: var(--color-300);
+  --border-deco: var(--color-500);
+  --blockquote-bg: var(--color-800);
+  --tag-bg: var(--color-300);
+  --tag-text: var(--color-900);
+
+  --card-bg: var(--color-900);
+  --card-border: var(--color-500);
+  --card-shadow: transparent;
+  --card-meta-bg: var(--color-800);
+  --card-meta-border: var(--color-600);
+  --quote-bg-start: var(--color-800);
+  --quote-bg-end: var(--color-800);
+  --quote-border: var(--color-300);
+  --quote-meta-bg: var(--color-800);
+  --link-domain-bg: var(--color-300);
+  --pattern-bg: var(--color-800);
+  --pattern-line: hsla(var(--hue), 100%, 70%, 0.1);
+
+  /* One font, like the machine only had one. VT323 is drawn for ~20px,
+     so the root size goes up a notch to keep body text legible. */
+  --font-display: 'VT323', 'Space Mono', monospace;
+  --font-body: 'VT323', 'Space Mono', monospace;
+  --font-serif: 'VT323', 'Space Mono', monospace;
+  --font-logo: 'VT323', 'Space Mono', monospace;
+  --font-weight-bold: 400;
+  font-size: 20px;
+
+  /* Bloom: a tight core plus a wide soft halo, both in the text colour */
+  --crt-glow: 0 0 1px currentColor, 0 0 8px hsla(var(--hue), 100%, 60%, 0.45);
+  --crt-glow-strong: 0 0 2px currentColor, 0 0 14px hsla(var(--hue), 100%, 60%, 0.6);
+}
+
+/* ---- Screen: scanlines, glass, refresh bar ----
+   The two static overlays sit on <html>, fixed to the viewport, so the
+   transforms on <body> below never re-parent them. The moving bar is on
+   <body> and moves with transform only, so it is composited rather than
+   repainted each frame. */
+
+[data-theme="crt"]::before,
+[data-theme="crt"]::after,
+[data-theme="crt"] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Scanlines */
+[data-theme="crt"]::before {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.28) 0 1px,
+    transparent 1px 3px
+  );
+}
+
+/* Vignette for the curved glass, darker in the corners than the edges */
+[data-theme="crt"]::after {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 55%,
+    hsla(var(--hue), 40%, 2%, 0.45) 90%,
+    hsla(var(--hue), 40%, 2%, 0.85) 100%
+  );
+}
+
+/* A soft bright band rolling down, the way a camera sees a 60Hz tube */
+[data-theme="crt"] body::before {
+  height: 40vh;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    hsla(var(--hue), 100%, 70%, 0.05) 45%,
+    hsla(var(--hue), 100%, 80%, 0.09) 50%,
+    hsla(var(--hue), 100%, 70%, 0.05) 55%,
+    transparent 100%
+  );
+  animation: crt-refresh 9s linear infinite;
+}
+
+@keyframes crt-refresh {
+  from { transform: translateY(-40vh); }
+  to   { transform: translateY(100vh); }
+}
+
+/* ---- Tube: power-on and flicker ---- */
+
+[data-theme="crt"] body {
+  transform-origin: 50% 50%;
+  animation:
+    crt-on 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 1,
+    crt-flicker 4s steps(1, end) 0.55s infinite;
+  text-shadow: var(--crt-glow);
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: none;
+}
+
+/* The picture opens from a horizontal line, as the deflection coils warm up */
+@keyframes crt-on {
+  0%   { transform: scale(1, 0.004); filter: brightness(4); }
+  35%  { transform: scale(1, 0.004); filter: brightness(4); }
+  70%  { transform: scale(1.02, 0.6); filter: brightness(1.6); }
+  100% { transform: none; filter: none; }
+}
+
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  31%   { opacity: 0.93; }
+  31.2% { opacity: 1; }
+  67%   { opacity: 0.96; }
+  67.3% { opacity: 1; }
+  68%   { opacity: 0.9; }
+  68.1% { opacity: 1; }
+}
+
+/* ---- Type: phosphor bloom (base glow is on body, above) ---- */
+
+[data-theme="crt"] h1,
+[data-theme="crt"] .posts-year__heading,
+[data-theme="crt"] .post__link-title,
+[data-theme="crt"] .post__summary-title {
+  text-shadow: var(--crt-glow-strong);
+  letter-spacing: 0.04em;
+}
+
+/* Blinking block cursor after the prompt */
+[data-theme="crt"] h1::after {
+  content: '\2588';
+  margin-left: 0.15em;
+  animation: crt-cursor 1s steps(1, end) infinite;
+}
+
+@keyframes crt-cursor {
+  50% { opacity: 0; }
+}
+
+/* ---- Cards: a box drawn on the screen, not a card floating over it ---- */
+
+[data-theme="crt"] .theme-toggle,
+[data-theme="crt"] .post__embed-preview,
+[data-theme="crt"] .post__embed-container,
+[data-theme="crt"] .post__embed-preview img,
+[data-theme="crt"] .post__embed-container img {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+[data-theme="crt"] .post {
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px var(--color-700), 0 0 12px hsla(var(--hue), 100%, 60%, 0.08);
+}
+
+/* ---- Images: single-phosphor duotone, slightly blown out like a
+   picture on a tube that was never meant to show one ---- */
+
+[data-theme="crt"] .post__embed-preview img,
+[data-theme="crt"] .post__embed-container img {
+  filter: grayscale(1) contrast(1.4) brightness(0.8) sepia(1) hue-rotate(62deg) saturate(2.4);
+}
+
+/* ---- Nav: the live button glows steadily, the others are dim ---- */
+
+[data-theme="crt"] .theme-toggle[aria-pressed="true"] {
+  box-shadow: 0 0 10px hsla(var(--hue), 100%, 60%, 0.5);
+  text-shadow: none;
+}
+
+/* ---- Accessibility: keep the palette, drop everything that moves ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="crt"] body,
+  [data-theme="crt"] body::before,
+  [data-theme="crt"] h1::after {
+    animation: none;
+  }
+
+  [data-theme="crt"] body::before {
+    display: none;
+  }
+
+  [data-theme="crt"] body {
+    transform: none;
+    filter: none;
+  }
+}
