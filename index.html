@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@700;800&family=Zilla+Slab:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/microblog.css" />
+  <link rel="stylesheet" href="css/glitch.css" />
   <script src="js/theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -442,6 +443,27 @@
   <footer>
     <p>Handcrafted with love</p>
   </footer>
+
+  <!-- Glitch theme: displacement filter applied to .post by css/glitch.css.
+       SMIL <animate> drives it so the mode needs no JS beyond the toggle.
+       Two maps chained: a slow low-frequency one that liquifies, then a
+       high-frequency horizontal-band one that jumps in bursts. -->
+  <svg class="glitch-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <filter id="glitch-warp" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+      <!-- Do not animate baseFrequency: regenerating the noise every frame
+           for every post halved the frame rate. Animating scale is cheap. -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="1" seed="2" result="liquid-noise" />
+      <feDisplacementMap in="SourceGraphic" in2="liquid-noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="liquid">
+        <animate attributeName="scale" values="3;10;3;6;3" dur="7s" repeatCount="indefinite" />
+      </feDisplacementMap>
+      <feTurbulence type="turbulence" baseFrequency="0.0015 0.45" numOctaves="1" seed="7" result="band-noise">
+        <animate attributeName="seed" values="1;5;9;13;17;21;25;29" dur="1.6s" calcMode="discrete" repeatCount="indefinite" />
+      </feTurbulence>
+      <feDisplacementMap in="liquid" in2="band-noise" scale="0" xChannelSelector="R" yChannelSelector="A">
+        <animate attributeName="scale" values="0;0;0;22;0;0;0;0;0;0;0;-30;0;0;0;0;0;0;14;0;0;0;0;0" dur="6s" calcMode="discrete" repeatCount="indefinite" />
+      </feDisplacementMap>
+    </filter>
+  </svg>
 
 </body>
 

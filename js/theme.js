@@ -6,10 +6,20 @@
     document.documentElement.dataset.theme = saved;
   }
 
-  // Toggle between default and blue theme
+  // Cycle order. '' is the default light theme; 'glitch' is an experiment
+  // (css/glitch.css) that warps, liquifies and adds noise to the posts.
+  const ORDER = ['', 'blue', 'glitch'];
+  // Button label names the theme you'll get by pressing it.
+  const LABEL = { '': 'Light', blue: 'Dark', glitch: 'Glitch' };
+
+  const nextTheme = function() {
+    const current = document.documentElement.dataset.theme || '';
+    const i = ORDER.indexOf(current);
+    return ORDER[(i + 1) % ORDER.length];
+  };
+
   window.toggleTheme = function() {
-    const current = document.documentElement.dataset.theme;
-    const next = current === 'blue' ? '' : 'blue';
+    const next = nextTheme();
     document.documentElement.dataset.theme = next;
     localStorage.setItem('theme', next);
     updateToggleLabel();
@@ -19,9 +29,9 @@
   window.updateToggleLabel = function() {
     const btn = document.querySelector('.theme-toggle');
     if (btn) {
-      const isBlue = document.documentElement.dataset.theme === 'blue';
-      btn.textContent = isBlue ? 'Light' : 'Dark';
-      btn.setAttribute('aria-label', isBlue ? 'Switch to light theme' : 'Switch to dark theme');
+      const label = LABEL[nextTheme()];
+      btn.textContent = label;
+      btn.setAttribute('aria-label', 'Switch to ' + label.toLowerCase() + ' theme');
     }
   };
 

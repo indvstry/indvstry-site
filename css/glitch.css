@@ -1,0 +1,203 @@
+/* ================================
+   GLITCH THEME (experimental)
+   Third stop on the theme toggle, after light and dark (`blue`).
+   Warps, liquifies and adds noise to the posts. Everything is CSS plus
+   the SMIL-animated SVG filter (#glitch-warp) at the bottom of
+   index.html; js/theme.js only sets data-theme="glitch".
+   Isolated in its own file so it can be ripped out in one go.
+   ================================ */
+
+/* --hue is animated below, so it has to be a registered <number> property
+   rather than a plain custom property (which would only snap, not tween). */
+@property --hue {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 96;
+}
+
+[data-theme="glitch"] {
+  --hue: 96;                       /* acid green */
+  --glitch-magenta: hsl(318, 100%, 62%);
+  --glitch-cyan: hsl(184, 100%, 55%);
+
+  --color-100: hsl(var(--hue), 100%, 86%);
+  --color-200: hsl(var(--hue), 95%, 70%);
+  --color-300: hsl(var(--hue), 85%, 55%);
+  --color-400: hsl(var(--hue), 70%, 42%);
+  --color-500: hsl(var(--hue), 50%, 30%);
+  --color-600: hsl(var(--hue), 35%, 22%);
+  --color-700: hsl(var(--hue), 25%, 14%);
+  --color-800: hsl(var(--hue), 20%, 8%);
+  --color-900: hsl(var(--hue), 30%, 4%);
+
+  /* Same semantic mapping as the blue theme in style.css */
+  --page-background: var(--color-900);
+  --text-color: var(--color-200);
+  --text-muted: var(--color-400);
+  --heading-color: var(--color-300);
+  --highlight-color: var(--color-300);
+  --border-deco: var(--color-600);
+  --blockquote-bg: var(--color-800);
+  --tag-bg: var(--color-300);
+  --tag-text: var(--color-900);
+
+  --card-bg: var(--color-800);
+  --card-border: var(--color-600);
+  --card-shadow: var(--color-900);
+  --card-meta-bg: var(--color-900);
+  --card-meta-border: var(--color-700);
+  --quote-bg-start: var(--color-800);
+  --quote-bg-end: var(--color-700);
+  --quote-border: var(--color-300);
+  --quote-meta-bg: var(--color-800);
+  --link-domain-bg: var(--color-300);
+  --pattern-bg: var(--color-800);
+  --pattern-line: hsla(var(--hue), 100%, 70%, 0.12);
+
+  /* Whole palette flashes to another hue for a frame every ~12s */
+  animation: glitch-hue 12s steps(1, end) infinite;
+}
+
+@keyframes glitch-hue {
+  0%, 100% { --hue: 96; }
+  38%      { --hue: 318; }
+  38.6%    { --hue: 96; }
+  71%      { --hue: 184; }
+  71.4%    { --hue: 96; }
+  72%      { --hue: 318; }
+  72.3%    { --hue: 96; }
+}
+
+/* ---- Posts: warp + jitter ---- */
+
+[data-theme="glitch"] .post {
+  position: relative;
+  filter: url(#glitch-warp);
+  /* Sideways tears; each column of the grid runs at a different offset so
+     the cards never jump in unison */
+  animation: glitch-jitter 7s steps(1, end) infinite;
+}
+
+[data-theme="glitch"] .post:nth-child(3n)   { animation-delay: -2.1s; }
+[data-theme="glitch"] .post:nth-child(3n+1) { animation-delay: -4.7s; }
+[data-theme="glitch"] .post:nth-child(5n+2) { animation-duration: 9s; }
+
+@keyframes glitch-jitter {
+  0%, 100% { transform: none; }
+  23%   { transform: translateX(-7px) skewX(-3deg); }
+  23.6% { transform: translateX(5px); }
+  24%   { transform: none; }
+  61%   { transform: translate(4px, -2px) skewX(5deg); }
+  61.4% { transform: translateX(-3px); }
+  62%   { transform: none; }
+  88%   { transform: translateX(9px); }
+  88.3% { transform: none; }
+}
+
+/* Scanlines under, grain on top; both ignore the pointer */
+[data-theme="glitch"] .post::before,
+[data-theme="glitch"] .post::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+[data-theme="glitch"] .post::before {
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.32) 0 1px,
+    transparent 1px 3px
+  );
+  animation: glitch-scan 6s linear infinite;
+}
+
+@keyframes glitch-scan {
+  to { background-position: 0 6px; }
+}
+
+[data-theme="glitch"] .post::after {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 200px 200px;
+  opacity: 0.22;
+  mix-blend-mode: screen;
+  animation: glitch-grain 0.4s steps(5, end) infinite;
+}
+
+@keyframes glitch-grain {
+  to { background-position: 73px 111px; }
+}
+
+/* ---- Images: duotone, lime-tinted, channel-split on hover ---- */
+
+[data-theme="glitch"] .post__embed-preview img,
+[data-theme="glitch"] .post__embed-container img {
+  filter: grayscale(1) sepia(1) hue-rotate(55deg) saturate(3) contrast(1.25);
+}
+
+[data-theme="glitch"] .post--embed:hover .post__embed-preview img,
+[data-theme="glitch"] .post--embed:hover .post__embed-container img {
+  filter: grayscale(1) contrast(1.4);
+}
+
+/* ---- Type: chromatic aberration ---- */
+
+[data-theme="glitch"] h1,
+[data-theme="glitch"] .posts-year__heading {
+  text-shadow:
+    -2px 0 var(--glitch-magenta),
+     2px 0 var(--glitch-cyan);
+  animation: glitch-split 5s steps(1, end) infinite;
+}
+
+[data-theme="glitch"] .post__link-title,
+[data-theme="glitch"] .post__summary-title,
+[data-theme="glitch"] .post--quote blockquote {
+  text-shadow:
+    -1px 0 var(--glitch-magenta),
+     1px 0 var(--glitch-cyan);
+}
+
+@keyframes glitch-split {
+  0%, 100% { text-shadow: -2px 0 var(--glitch-magenta), 2px 0 var(--glitch-cyan); }
+  17%   { text-shadow: -6px 0 var(--glitch-magenta), 6px 0 var(--glitch-cyan); }
+  17.5% { text-shadow:  3px 0 var(--glitch-magenta), -3px 0 var(--glitch-cyan); }
+  18%   { text-shadow: -2px 0 var(--glitch-magenta), 2px 0 var(--glitch-cyan); }
+  54%   { text-shadow: -2px -3px var(--glitch-magenta), 2px 3px var(--glitch-cyan); }
+  54.4% { text-shadow: -2px 0 var(--glitch-magenta), 2px 0 var(--glitch-cyan); }
+}
+
+/* The toggle itself flickers like a bad neon sign */
+[data-theme="glitch"] .theme-toggle {
+  border-color: var(--color-300);
+  color: var(--color-300);
+  animation: glitch-flicker 3s steps(1, end) infinite;
+}
+
+@keyframes glitch-flicker {
+  0%, 100% { opacity: 1; }
+  47%  { opacity: 0.35; }
+  47.5%{ opacity: 1; }
+  49%  { opacity: 0.6; }
+  49.3%{ opacity: 1; }
+}
+
+/* ---- Accessibility: keep the palette, drop everything that moves ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="glitch"],
+  [data-theme="glitch"] .post,
+  [data-theme="glitch"] .post::before,
+  [data-theme="glitch"] .post::after,
+  [data-theme="glitch"] h1,
+  [data-theme="glitch"] .posts-year__heading,
+  [data-theme="glitch"] .theme-toggle {
+    animation: none;
+  }
+
+  [data-theme="glitch"] .post {
+    filter: none;
+    transform: none;
+  }
+}
