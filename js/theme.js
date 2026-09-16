@@ -1,4 +1,4 @@
-// Theme switcher - applies saved theme on load and provides toggle function
+// Theme switcher - applies saved theme on load and marks the active button
 (function() {
   // Apply saved theme immediately to prevent flash
   const saved = localStorage.getItem('theme');
@@ -6,36 +6,23 @@
     document.documentElement.dataset.theme = saved;
   }
 
-  // Cycle order. '' is the default light theme; 'glitch' is an experiment
-  // (css/glitch.css) that warps, liquifies and adds noise to the posts.
-  const ORDER = ['', 'blue', 'glitch'];
-  // Button label names the theme you'll get by pressing it.
-  const LABEL = { '': 'Light', blue: 'Dark', glitch: 'Glitch' };
-
-  const nextTheme = function() {
-    const current = document.documentElement.dataset.theme || '';
-    const i = ORDER.indexOf(current);
-    return ORDER[(i + 1) % ORDER.length];
-  };
-
-  window.toggleTheme = function() {
-    const next = nextTheme();
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem('theme', next);
+  // '' is the default light theme, 'blue' is dark, 'glitch' is the
+  // experiment in css/glitch.css. Each has its own button in the nav.
+  window.setTheme = function(name) {
+    document.documentElement.dataset.theme = name;
+    localStorage.setItem('theme', name);
     updateToggleLabel();
   };
 
-  // Update button label based on current theme
+  // Highlight whichever button matches the current theme
   window.updateToggleLabel = function() {
-    const btn = document.querySelector('.theme-toggle');
-    if (btn) {
-      const label = LABEL[nextTheme()];
-      btn.textContent = label;
-      btn.setAttribute('aria-label', 'Switch to ' + label.toLowerCase() + ' theme');
-    }
+    const current = document.documentElement.dataset.theme || '';
+    document.querySelectorAll('.theme-toggle[data-set-theme]').forEach(function(btn) {
+      btn.setAttribute('aria-pressed', btn.dataset.setTheme === current ? 'true' : 'false');
+    });
   };
 
-  // Initialize label when DOM is ready
+  // Initialize when DOM is ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', updateToggleLabel);
   } else {

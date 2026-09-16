@@ -460,6 +460,23 @@ figcaption::before {
   outline-offset: 2px;
 }
 
+/* Three buttons fused into one segmented control; the pressed one is
+   filled the same way hover is */
+.theme-switch {
+  display: inline-flex;
+}
+
+.theme-switch .theme-toggle + .theme-toggle {
+  margin-left: -1px;
+}
+
+.theme-toggle[aria-pressed="true"] {
+  background: var(--heading-color);
+  color: var(--page-background);
+  border-color: var(--heading-color);
+  cursor: default;
+}
+
 .read:before { content: "👓 "; filter: grayscale(100%); }
 /* Removed .box, .content-box (not used in production) */
 #redd { color: red; }

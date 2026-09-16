@@ -168,10 +168,8 @@
   54.4% { text-shadow: -2px 0 var(--glitch-magenta), 2px 0 var(--glitch-cyan); }
 }
 
-/* The toggle itself flickers like a bad neon sign */
-[data-theme="glitch"] .theme-toggle {
-  border-color: var(--color-300);
-  color: var(--color-300);
+/* The active Glitch button flickers like a bad neon sign */
+[data-theme="glitch"] .theme-toggle[aria-pressed="true"] {
   animation: glitch-flicker 3s steps(1, end) infinite;
 }
 
@@ -192,7 +190,7 @@
   [data-theme="glitch"] .post::after,
   [data-theme="glitch"] h1,
   [data-theme="glitch"] .posts-year__heading,
-  [data-theme="glitch"] .theme-toggle {
+  [data-theme="glitch"] .theme-toggle[aria-pressed="true"] {
     animation: none;
   }
 

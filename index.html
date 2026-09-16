@@ -45,7 +45,13 @@
     <nav class="crumbs" id="navMain" aria-label="Main Navigation">
       <ul class="listNav" role="list">
         <li class="crumb"><a href="index.html" aria-current="page">Home</a></li>
-        <li class="crumb"><button class="theme-toggle" onclick="toggleTheme()">Dark</button></li>
+        <li class="crumb">
+          <div class="theme-switch" role="group" aria-label="Theme">
+            <button class="theme-toggle" data-set-theme="" onclick="setTheme('')" aria-pressed="true">Light</button>
+            <button class="theme-toggle" data-set-theme="blue" onclick="setTheme('blue')" aria-pressed="false">Dark</button>
+            <button class="theme-toggle" data-set-theme="glitch" onclick="setTheme('glitch')" aria-pressed="false">Glitch</button>
+          </div>
+        </li>
       </ul>
     </nav>
     <div class="header-text">
